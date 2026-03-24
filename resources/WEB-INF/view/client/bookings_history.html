@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отель · Мои бронирования</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ (без профиля) ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+        .bookings-container {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid #EDE8E0;
+        }
+
+        /* ===== КАРТОЧКИ БРОНИРОВАНИЙ ===== */
+        .bookings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .booking-card {
+            border: 1px solid #EDE8E0;
+            border-radius: 24px;
+            background: #FFFFFF;
+            padding: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .booking-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+            border-color: #DFD6CA;
+        }
+
+        /* миниатюра фото */
+        .booking-thumb {
+            width: 220px;
+            height: 165px;
+            background: #E9EFE4;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .booking-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .booking-thumb.no-image {
+            background: linear-gradient(135deg, #DDE3DB 0%, #CAD2C4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #8AA79A;
+        }
+        .booking-thumb.no-image::before {
+            content: "🏨";
+            font-size: 48px;
+            opacity: 0.5;
+        }
+
+        /* основная информация о брони */
+        .booking-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 280px;
+        }
+
+        .booking-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .room-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2C5A4A;
+            background: transparent;
+            padding: 0;
+        }
+
+        .booking-status {
+            background: #F6F4EF;
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5B7868;
+        }
+        .booking-status.confirmed {
+            background: #E0F0E8;
+            color: #4F7766;
+        }
+        .booking-status.cancelled {
+            background: #F9EFE8;
+            color: #B67B5E;
+        }
+        .booking-status.completed {
+            background: #E8E9F0;
+            color: #6C6F8A;
+        }
+
+        .booking-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 4px 0;
+        }
+
+        .detail-item {
+            background: #F6F4EF;
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5B7868;
+        }
+
+        .booking-address {
+            background: #F6F4EF;
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 14px;
+            color: #5B7868;
+            width: fit-content;
+        }
+
+        /* нижняя строка с ценой и кнопками */
+        .booking-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .booking-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4F7766;
+            background: transparent;
+            padding: 0;
+        }
+        .booking-price::before {
+            content: "₽";
+            font-size: 18px;
+            margin-right: 3px;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            border-radius: 40px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A6A5B;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .action-btn:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .action-btn.cancel {
+            border-color: #E8CFC2;
+            color: #B67B5E;
+        }
+        .action-btn.cancel:hover {
+            background: #F9EFE8;
+            border-color: #B67B5E;
+        }
+
+        /* ===== ПАГИНАЦИЯ ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .page-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 12px;
+            background: white;
+            border: 1px solid #DFD6CA;
+            border-radius: 44px;
+            color: #4A6A5B;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .page-item:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .page-item.active {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+        .page-item.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Модальное окно для отмены бронирования */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid #EDE8E0;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 650;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+        }
+        .modal-text {
+            color: #4A6156;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+        .modal-btn.cancel-modal {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            color: #4A6A5B;
+        }
+        .modal-btn.cancel-modal:hover {
+            background: #F0F3EE;
+        }
+        .modal-btn.confirm-cancel {
+            background: #B67B5E;
+            color: white;
+        }
+        .modal-btn.confirm-cancel:hover {
+            background: #9E6248;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .booking-card {
+                flex-direction: column;
+            }
+            .booking-thumb {
+                width: 100%;
+                height: 200px;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .booking-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .booking-actions {
+                width: 100%;
+            }
+            .action-btn {
+                flex: 1;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">hotel</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Комнаты</a>
+                    <a href="#" class="nav-link active">Мои брони</a>
+                    <a href="#" class="nav-link">Профиль</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">📋 История бронирований</div>
+        </div>
+
+        <!-- Основной контейнер -->
+        <div class="bookings-container">
+            <div class="bookings-list">
+                <!-- Карточка 1 - Активное бронирование -->
+                <div class="booking-card" data-booking-id="1001">
+                    <div class="booking-thumb">
+                        <img src="https://placehold.co/400x300/E8D9C5/6C9A8B?text=Стандарт+Лайт" alt="Стандарт Лайт">
+                    </div>
+                    <div class="booking-info">
+                        <div class="booking-header">
+                            <div class="room-name">Стандарт "Лайт"</div>
+                            <div class="booking-status confirmed">Подтверждено</div>
+                        </div>
+                        <div class="booking-details">
+                            <span class="detail-item">📅 15 июн 2026 — 20 июн 2026</span>
+                            <span class="detail-item">👥 2 гостя</span>
+                        </div>
+                        <div class="booking-address">🏢 корпус А, 3 этаж</div>
+                        <div class="booking-footer">
+                            <div class="booking-price">21 000</div>
+                            <div class="booking-actions">
+                                <a href="#" class="action-btn">Подробнее</a>
+                                <button type="button" class="action-btn cancel" data-booking-id="1001" data-room-name="Стандарт Лайт">Отменить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 2 - Завершенное бронирование -->
+                <div class="booking-card" data-booking-id="1002">
+                    <div class="booking-thumb">
+                        <img src="https://placehold.co/400x300/DFD9CF/6C9A8B?text=Комфорт+балкон" alt="Комфорт балкон">
+                    </div>
+                    <div class="booking-info">
+                        <div class="booking-header">
+                            <div class="room-name">Комфорт + балкон</div>
+                            <div class="booking-status completed">Завершено</div>
+                        </div>
+                        <div class="booking-details">
+                            <span class="detail-item">📅 01 мар 2026 — 05 мар 2026</span>
+                            <span class="detail-item">👥 2 гостя</span>
+                        </div>
+                        <div class="booking-address">🏢 корпус B, 5 этаж</div>
+                        <div class="booking-footer">
+                            <div class="booking-price">26 000</div>
+                            <div class="booking-actions">
+                                <a href="#" class="action-btn">Подробнее</a>
+                                <button type="button" class="action-btn cancel" disabled style="opacity: 0.4; cursor: not-allowed;">Отменить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 3 - Отмененное бронирование -->
+                <div class="booking-card" data-booking-id="1003">
+                    <div class="booking-thumb">
+                        <img src="https://placehold.co/400x300/CAD2C4/4F7766?text=Семейный+люкс" alt="Семейный люкс">
+                    </div>
+                    <div class="booking-info">
+                        <div class="booking-header">
+                            <div class="room-name">Семейный люкс</div>
+                            <div class="booking-status cancelled">Отменено</div>
+                        </div>
+                        <div class="booking-details">
+                            <span class="detail-item">📅 10 апр 2026 — 15 апр 2026</span>
+                            <span class="detail-item">👥 4 гостя</span>
+                        </div>
+                        <div class="booking-address">🏢 корпус А, 2 этаж</div>
+                        <div class="booking-footer">
+                            <div class="booking-price">49 000</div>
+                            <div class="booking-actions">
+                                <a href="#" class="action-btn">Подробнее</a>
+                                <button type="button" class="action-btn cancel" disabled style="opacity: 0.4; cursor: not-allowed;">Отменить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 4 - Активное бронирование -->
+                <div class="booking-card" data-booking-id="1004">
+                    <div class="booking-thumb">
+                        <img src="https://placehold.co/400x300/E2DFD5/6C9A8B?text=Премиум+вид" alt="Премиум вид">
+                    </div>
+                    <div class="booking-info">
+                        <div class="booking-header">
+                            <div class="room-name">Премиум вид</div>
+                            <div class="booking-status confirmed">Подтверждено</div>
+                        </div>
+                        <div class="booking-details">
+                            <span class="detail-item">📅 01 июл 2026 — 05 июл 2026</span>
+                            <span class="detail-item">👥 2 гостя</span>
+                        </div>
+                        <div class="booking-address">🏢 корпус C, 7 этаж</div>
+                        <div class="booking-footer">
+                            <div class="booking-price">44 800</div>
+                            <div class="booking-actions">
+                                <a href="#" class="action-btn">Подробнее</a>
+                                <button type="button" class="action-btn cancel" data-booking-id="1004" data-room-name="Премиум вид">Отменить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Пагинация -->
+            <div class="pagination">
+                <a href="#" class="page-item">1</a>
+                <a href="#" class="page-item active">2</a>
+                <a href="#" class="page-item">3</a>
+                <a href="#" class="page-item">4</a>
+                <span class="page-item disabled">...</span>
+                <a href="#" class="page-item">8</a>
+            </div>
+        </div>
+
+        <div class="footer-placeholder">
+            🌿 HavenStay — тишина, комфорт и забота о каждом госте
+        </div>
+    </div>
+
+    <!-- Модальное окно для отмены бронирования -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal-content">
+            <div class="modal-title">Отмена бронирования</div>
+            <div class="modal-text" id="modalText">
+                Вы действительно хотите отменить бронирование номера <strong id="cancelRoomName"></strong>?
+            </div>
+            <form id="cancelForm" method="POST" action="">
+                <input type="hidden" name="booking_id" id="cancelBookingId">
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel-modal" id="closeModalBtn">Отмена</button>
+                    <button type="submit" class="modal-btn confirm-cancel">Подтвердить отмену</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Модальное окно для отмены бронирования
+        const modalOverlay = document.getElementById('cancelModal');
+        const cancelBookingIdInput = document.getElementById('cancelBookingId');
+        const cancelRoomNameSpan = document.getElementById('cancelRoomName');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelForm = document.getElementById('cancelForm');
+        
+        // Все кнопки отмены
+        const cancelButtons = document.querySelectorAll('.action-btn.cancel:not([disabled])');
+        
+        function openModal(bookingId, roomName) {
+            cancelBookingIdInput.value = bookingId;
+            cancelRoomNameSpan.textContent = roomName;
+            modalOverlay.classList.add('active');
+        }
+        
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+        
+        cancelButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const bookingCard = this.closest('.booking-card');
+                const bookingId = this.getAttribute('data-booking-id') || bookingCard.getAttribute('data-booking-id');
+                const roomNameElement = bookingCard.querySelector('.room-name');
+                const roomName = roomNameElement ? roomNameElement.textContent : 'номер';
+                openModal(bookingId, roomName);
+            });
+        });
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        // Закрытие при клике на оверлей
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+        
+        // Обработка формы отмены
+        cancelForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const bookingId = cancelBookingIdInput.value;
+            
+            // Имитация отправки на сервер
+            alert(`Бронирование #${bookingId} успешно отменено.\n\nСервер получил запрос на отмену.`);
+            closeModal();
+            
+            // В реальном проекте здесь был бы fetch или отправка формы
+            // this.submit(); - раскомментировать для реальной отправки
+        });
+        
+        // Пагинация (имитация)
+        const pageLinks = document.querySelectorAll('.page-item:not(.disabled)');
+        pageLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                pageLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                alert('📄 Загрузка страницы ' + this.textContent + ' (демо-режим)');
+            });
+        });
+        
+        // Кнопки "Подробнее"
+        const detailButtons = document.querySelectorAll('.action-btn:not(.cancel)');
+        detailButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('🔍 Подробная информация о бронировании (демо-режим)');
+            });
+        });
+        
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Комнаты') alert('🏠 Переход на страницу списка номеров');
+                else if (page === 'Мои брони') alert('📋 Вы уже на странице истории бронирований');
+                else if (page === 'Профиль') alert('👤 Переход в личный кабинет');
+            });
+        });
+    </script>
+</body>
+</html>

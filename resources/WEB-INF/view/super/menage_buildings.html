@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Суперпользователь · Управление корпусами</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+           Без эмодзи (кроме логотипа)
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ СУПЕРПОЛЬЗОВАТЕЛЯ ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ФОРМА ДОБАВЛЕНИЯ НОВОГО КОРПУСА ===== */
+        .add-section {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .add-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2B4B3E;
+            margin-bottom: 20px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .add-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 24px;
+            align-items: flex-end;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 180px;
+            gap: 6px;
+        }
+
+        .field-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-input {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            transition: 0.2s;
+        }
+        .field-input input,
+        .field-input select {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+        }
+        .field-input input::placeholder {
+            color: #B9C9BF;
+        }
+        .field-input:hover {
+            border-color: #BEC9B7;
+        }
+
+        .add-button {
+            background: #6C9A8B;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            height: 44px;
+            display: flex;
+            align-items: center;
+        }
+        .add-button:hover {
+            background: #588173;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== СПИСОК КОРПУСОВ ===== */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 12px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .list-header-left {
+            font-size: 20px;
+            font-weight: 650;
+            color: #2B4B3E;
+            background: transparent;
+            padding: 0;
+        }
+
+        .list-header-right {
+            background: #F0F1EC;
+            border-radius: 40px;
+            padding: 6px 20px;
+            color: #4C6F60;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .buildings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 30px;
+        }
+
+        .buildings-table th {
+            background: #F6F4EF;
+            border-bottom: 2px solid #EDE8E0;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .buildings-table td {
+            background: transparent;
+            border-bottom: 1px solid #EDE8E0;
+            padding: 14px 12px;
+            font-size: 14px;
+            color: #4A6156;
+        }
+
+        .actions-cell {
+            text-align: center;
+        }
+
+        .action-link {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            border-radius: 40px;
+            padding: 6px 14px;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4A6A5B;
+            margin-right: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .action-link:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .action-link.edit {
+            border-color: #6C9A8B;
+            color: #6C9A8B;
+        }
+        .action-link.edit:hover {
+            background: #E0F0E8;
+            border-color: #6C9A8B;
+        }
+        .action-link.delete {
+            border-color: #E8CFC2;
+            color: #B67B5E;
+        }
+        .action-link.delete:hover {
+            background: #F9EFE8;
+            border-color: #B67B5E;
+        }
+        .action-link.save {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+        .action-link.save:hover {
+            background: #588173;
+        }
+        .action-link.cancel {
+            border-color: #DFD6CA;
+            color: #4A6A5B;
+        }
+
+        /* Режим редактирования */
+        .editable-input {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 16px;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .editable-input:focus {
+            border-color: #6C9A8B;
+            box-shadow: 0 0 0 2px rgba(108, 154, 139, 0.2);
+        }
+
+        /* ===== ПАГИНАЦИЯ ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .page-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 12px;
+            background: white;
+            border: 1px solid #DFD6CA;
+            border-radius: 44px;
+            color: #4A6A5B;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .page-item:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .page-item.active {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        /* Модальное окно для удаления */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid #EDE8E0;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 650;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+        }
+        .modal-text {
+            color: #4A6156;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+        .modal-btn.cancel-modal {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            color: #4A6A5B;
+        }
+        .modal-btn.cancel-modal:hover {
+            background: #F0F3EE;
+        }
+        .modal-btn.confirm {
+            background: #B67B5E;
+            color: white;
+        }
+        .modal-btn.confirm:hover {
+            background: #9E6248;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .add-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .buildings-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация для суперпользователя -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">super</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Корпусы</a>
+                    <a href="#" class="nav-link">Администраторы</a>
+                    <a href="#" class="nav-link">Комнаты</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">Управление корпусами</div>
+        </div>
+
+        <!-- Форма добавления нового корпуса -->
+        <div class="add-section">
+            <div class="add-header">Добавление нового корпуса</div>
+            <form class="add-form" id="addBuildingForm" method="POST" action="">
+                <div class="form-field">
+                    <div class="field-label">Название корпуса</div>
+                    <div class="field-input">
+                        <input type="text" name="building_name" placeholder="Корпус А" required>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="field-label">Адрес</div>
+                    <div class="field-input">
+                        <input type="text" name="address" placeholder="ул. Ленина, д. 10" required>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="field-label">Количество этажей</div>
+                    <div class="field-input">
+                        <input type="number" name="floors" placeholder="5" min="1" max="50" required>
+                    </div>
+                </div>
+                <button type="submit" class="add-button">Добавить корпус</button>
+            </form>
+        </div>
+
+        <!-- Заголовок списка -->
+        <div class="list-header">
+            <div class="list-header-left">Существующие корпуса</div>
+            <div class="list-header-right" id="buildingsCount">всего: 4 корпуса</div>
+        </div>
+
+        <!-- Таблица корпусов -->
+        <table class="buildings-table" id="buildingsTable">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Адрес</th>
+                    <th>Количество этажей</th>
+                    <th class="actions-cell">Действия</th>
+                 </thead>
+            <tbody>
+                <tr data-building-id="1">
+                    <td class="name-cell">Корпус А</td>
+                    <td class="address-cell">ул. Ленина, д. 10</td>
+                    <td class="floors-cell">5</td>
+                    <td class="actions-cell">
+                        <button class="action-link edit" data-action="edit">Редактировать</button>
+                        <button class="action-link delete" data-action="delete" data-building-name="Корпус А">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-building-id="2">
+                    <td class="name-cell">Корпус Б</td>
+                    <td class="address-cell">ул. Пушкина, д. 25</td>
+                    <td class="floors-cell">7</td>
+                    <td class="actions-cell">
+                        <button class="action-link edit" data-action="edit">Редактировать</button>
+                        <button class="action-link delete" data-action="delete" data-building-name="Корпус Б">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-building-id="3">
+                    <td class="name-cell">Корпус В</td>
+                    <td class="address-cell">пр. Мира, д. 15</td>
+                    <td class="floors-cell">4</td>
+                    <td class="actions-cell">
+                        <button class="action-link edit" data-action="edit">Редактировать</button>
+                        <button class="action-link delete" data-action="delete" data-building-name="Корпус В">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-building-id="4">
+                    <td class="name-cell">Корпус Г</td>
+                    <td class="address-cell">ул. Садовая, д. 8</td>
+                    <td class="floors-cell">6</td>
+                    <td class="actions-cell">
+                        <button class="action-link edit" data-action="edit">Редактировать</button>
+                        <button class="action-link delete" data-action="delete" data-building-name="Корпус Г">Удалить</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-item">1</a>
+            <a href="#" class="page-item active">2</a>
+            <a href="#" class="page-item">3</a>
+            <a href="#" class="page-item">4</a>
+            <a href="#" class="page-item">...</a>
+            <a href="#" class="page-item">8</a>
+        </div>
+
+        <div class="footer-placeholder">
+            HavenStay — система управления корпусами
+        </div>
+    </div>
+
+    <!-- Модальное окно для удаления -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-title">Удаление корпуса</div>
+            <div class="modal-text">
+                Вы действительно хотите удалить корпус <strong id="deleteBuildingName"></strong>?
+                <br><br>
+                <span style="font-size: 14px; color: #B67B5E;">Это действие необратимо. Все комнаты в этом корпусе также будут удалены.</span>
+            </div>
+            <form id="deleteForm" method="POST" action="">
+                <input type="hidden" name="building_id" id="deleteBuildingId">
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel-modal" id="closeDeleteModalBtn">Отмена</button>
+                    <button type="submit" class="modal-btn confirm">Удалить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Корпусы') alert('Вы уже на странице управления корпусами');
+                else if (page === 'Администраторы') alert('Переход к управлению администраторами');
+                else if (page === 'Комнаты') alert('Переход к управлению комнатами');
+            });
+        });
+
+        // Функция для редактирования строки
+        function enterEditMode(row) {
+            const nameCell = row.querySelector('.name-cell');
+            const addressCell = row.querySelector('.address-cell');
+            const floorsCell = row.querySelector('.floors-cell');
+            const actionsCell = row.querySelector('.actions-cell');
+            
+            const currentName = nameCell.textContent;
+            const currentAddress = addressCell.textContent;
+            const currentFloors = floorsCell.textContent;
+            
+            nameCell.innerHTML = `<input type="text" class="editable-input" value="${currentName}" id="edit_name">`;
+            addressCell.innerHTML = `<input type="text" class="editable-input" value="${currentAddress}" id="edit_address">`;
+            floorsCell.innerHTML = `<input type="number" class="editable-input" value="${currentFloors}" id="edit_floors" min="1">`;
+            
+            actionsCell.innerHTML = `
+                <button class="action-link save" data-action="save">Сохранить</button>
+                <button class="action-link cancel" data-action="cancel">Отмена</button>
+            `;
+            
+            const saveBtn = actionsCell.querySelector('[data-action="save"]');
+            const cancelBtn = actionsCell.querySelector('[data-action="cancel"]');
+            
+            saveBtn.addEventListener('click', () => saveEdit(row));
+            cancelBtn.addEventListener('click', () => cancelEdit(row, currentName, currentAddress, currentFloors));
+        }
+        
+        function saveEdit(row) {
+            const buildingId = row.getAttribute('data-building-id');
+            const newName = row.querySelector('#edit_name').value;
+            const newAddress = row.querySelector('#edit_address').value;
+            const newFloors = row.querySelector('#edit_floors').value;
+            
+            if (!newName || !newAddress || !newFloors) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            // Обновляем ячейки
+            row.querySelector('.name-cell').textContent = newName;
+            row.querySelector('.address-cell').textContent = newAddress;
+            row.querySelector('.floors-cell').textContent = newFloors;
+            
+            const actionsCell = row.querySelector('.actions-cell');
+            actionsCell.innerHTML = `
+                <button class="action-link edit" data-action="edit">Редактировать</button>
+                <button class="action-link delete" data-action="delete" data-building-name="${newName}">Удалить</button>
+            `;
+            
+            // Переназначаем обработчики
+            const editBtn = actionsCell.querySelector('[data-action="edit"]');
+            const deleteBtn = actionsCell.querySelector('[data-action="delete"]');
+            
+            editBtn.addEventListener('click', () => enterEditMode(row));
+            deleteBtn.addEventListener('click', () => openDeleteModal(row, newName));
+            
+            alert(`✅ Данные корпуса "${newName}" успешно обновлены!`);
+        }
+        
+        function cancelEdit(row, originalName, originalAddress, originalFloors) {
+            row.querySelector('.name-cell').textContent = originalName;
+            row.querySelector('.address-cell').textContent = originalAddress;
+            row.querySelector('.floors-cell').textContent = originalFloors;
+            
+            const actionsCell = row.querySelector('.actions-cell');
+            actionsCell.innerHTML = `
+                <button class="action-link edit" data-action="edit">Редактировать</button>
+                <button class="action-link delete" data-action="delete" data-building-name="${originalName}">Удалить</button>
+            `;
+            
+            const editBtn = actionsCell.querySelector('[data-action="edit"]');
+            const deleteBtn = actionsCell.querySelector('[data-action="delete"]');
+            
+            editBtn.addEventListener('click', () => enterEditMode(row));
+            deleteBtn.addEventListener('click', () => openDeleteModal(row, originalName));
+        }
+        
+        // Модальное окно для удаления
+        const deleteModal = document.getElementById('deleteModal');
+        const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteBuildingId = document.getElementById('deleteBuildingId');
+        const deleteBuildingName = document.getElementById('deleteBuildingName');
+        
+        let currentRowToDelete = null;
+        
+        function openDeleteModal(row, buildingName) {
+            currentRowToDelete = row;
+            deleteBuildingName.textContent = buildingName;
+            deleteBuildingId.value = row.getAttribute('data-building-id');
+            deleteModal.classList.add('active');
+        }
+        
+        function closeDeleteModal() {
+            deleteModal.classList.remove('active');
+            currentRowToDelete = null;
+        }
+        
+        closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+        
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+        
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (currentRowToDelete) {
+                const buildingName = currentRowToDelete.querySelector('.name-cell').textContent;
+                currentRowToDelete.remove();
+                alert(`✅ Корпус "${buildingName}" успешно удален`);
+                closeDeleteModal();
+                
+                // Обновляем счетчик
+                const remainingRows = document.querySelectorAll('#buildingsTable tbody tr').length;
+                const counterSpan = document.getElementById('buildingsCount');
+                if (counterSpan) {
+                    const text = remainingRows === 1 ? 'корпус' : 'корпуса';
+                    counterSpan.textContent = `всего: ${remainingRows} ${text}`;
+                }
+            }
+        });
+        
+        // Инициализация обработчиков для существующих строк
+        const rows = document.querySelectorAll('#buildingsTable tbody tr');
+        rows.forEach(row => {
+            const editBtn = row.querySelector('[data-action="edit"]');
+            const deleteBtn = row.querySelector('[data-action="delete"]');
+            
+            if (editBtn) {
+                editBtn.addEventListener('click', () => enterEditMode(row));
+            }
+            if (deleteBtn) {
+                const buildingName = deleteBtn.getAttribute('data-building-name') || row.querySelector('.name-cell').textContent;
+                deleteBtn.addEventListener('click', () => openDeleteModal(row, buildingName));
+            }
+        });
+        
+        // Добавление нового корпуса
+        const addBuildingForm = document.getElementById('addBuildingForm');
+        addBuildingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(addBuildingForm);
+            const buildingName = formData.get('building_name');
+            const address = formData.get('address');
+            const floors = formData.get('floors');
+            
+            if (!buildingName || !address || !floors) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            const tbody = document.querySelector('#buildingsTable tbody');
+            const newRow = document.createElement('tr');
+            const newId = Date.now();
+            newRow.setAttribute('data-building-id', newId);
+            
+            newRow.innerHTML = `
+                <td class="name-cell">${buildingName}</td>
+                <td class="address-cell">${address}</td>
+                <td class="floors-cell">${floors}</td>
+                <td class="actions-cell">
+                    <button class="action-link edit" data-action="edit">Редактировать</button>
+                    <button class="action-link delete" data-action="delete" data-building-name="${buildingName}">Удалить</button>
+                </td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            const editBtn = newRow.querySelector('[data-action="edit"]');
+            const deleteBtn = newRow.querySelector('[data-action="delete"]');
+            
+            editBtn.addEventListener('click', () => enterEditMode(newRow));
+            deleteBtn.addEventListener('click', () => openDeleteModal(newRow, buildingName));
+            
+            alert(`✅ Корпус "${buildingName}" успешно добавлен!`);
+            addBuildingForm.reset();
+            
+            // Обновляем счетчик
+            const remainingRows = document.querySelectorAll('#buildingsTable tbody tr').length;
+            const counterSpan = document.getElementById('buildingsCount');
+            if (counterSpan) {
+                const text = remainingRows === 1 ? 'корпус' : 'корпуса';
+                counterSpan.textContent = `всего: ${remainingRows} ${text}`;
+            }
+        });
+        
+        // Пагинация
+        const pageItems = document.querySelectorAll('.page-item');
+        pageItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.classList.contains('active')) return;
+                pageItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                alert(`Загрузка страницы ${this.textContent}`);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отель · Регистрация</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ (без профиля) ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+        .register-container {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 32px;
+            margin-bottom: 20px;
+            border: 1px solid #EDE8E0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== ЗАГОЛОВОК ФОРМЫ ===== */
+        .form-title {
+            font-size: 24px;
+            font-weight: 650;
+            color: #2B4B3E;
+            margin-bottom: 28px;
+            text-align: center;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ПОЛЯ ФОРМЫ ===== */
+        .form-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-input {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            transition: all 0.2s;
+        }
+        .field-input input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 16px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+        }
+        .field-input input::placeholder {
+            color: #B9C9BF;
+        }
+        .field-input:focus-within {
+            border-color: #6C9A8B;
+            box-shadow: 0 0 0 2px rgba(108, 154, 139, 0.2);
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: #8DAF9E;
+            margin-top: 4px;
+            padding-left: 8px;
+        }
+
+        /* ===== КНОПКИ ДЕЙСТВИЙ ===== */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0 24px;
+        }
+
+        .button.primary {
+            background: #6C9A8B;
+            border: none;
+            border-radius: 60px;
+            padding: 14px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            width: 100%;
+        }
+        .button.primary:hover {
+            background: #588173;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(108, 154, 139, 0.3);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-link a {
+            background: transparent;
+            border: none;
+            font-size: 15px;
+            color: #6C9A8B;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+        .login-link a:hover {
+            color: #588173;
+            text-decoration: underline;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .register-container {
+                padding: 24px;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">hotel</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Комнаты</a>
+                    <a href="#" class="nav-link">Мои брони</a>
+                    <a href="#" class="nav-link">Профиль</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">📝 Регистрация</div>
+        </div>
+
+        <!-- Основной контейнер с формой -->
+        <div class="register-container">
+            <div class="form-title">Создание нового аккаунта</div>
+
+            <!-- Форма регистрации (отправляет данные на сервер) -->
+            <form method="POST" action="" id="registerForm">
+                <div class="form-fields">
+                    <!-- Имя -->
+                    <div class="field-group">
+                        <div class="field-label">Имя</div>
+                        <div class="field-input">
+                            <input type="text" name="name" placeholder="Иван Иванов" required>
+                        </div>
+                    </div>
+
+                    <!-- Номер телефона -->
+                    <div class="field-group">
+                        <div class="field-label">Номер телефона</div>
+                        <div class="field-input">
+                            <input type="tel" name="phone" placeholder="+7 (999) 123-45-67" required>
+                        </div>
+                        <div class="field-hint">Для связи и подтверждения бронирований</div>
+                    </div>
+
+                    <!-- Электронная почта (логин) -->
+                    <div class="field-group">
+                        <div class="field-label">Электронная почта (логин)</div>
+                        <div class="field-input">
+                            <input type="email" name="email" placeholder="example@mail.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Пароль -->
+                    <div class="field-group">
+                        <div class="field-label">Пароль</div>
+                        <div class="field-input">
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="field-hint">Минимум 8 символов, буквы и цифры</div>
+                    </div>
+
+                    <!-- Подтверждение пароля -->
+                    <div class="field-group">
+                        <div class="field-label">Подтверждение пароля</div>
+                        <div class="field-input">
+                            <input type="password" name="password_confirm" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопка регистрации -->
+                <div class="action-buttons">
+                    <button type="submit" class="button primary">Зарегистрироваться</button>
+                </div>
+            </form>
+
+            <!-- Ссылка для уже зарегистрированных -->
+            <div class="login-link">
+                <a href="#">Уже есть аккаунт? Войти</a>
+            </div>
+        </div>
+
+        <div class="footer-placeholder">
+            🌿 HavenStay — тишина, комфорт и забота о каждом госте
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Комнаты') alert('🏠 Переход на страницу списка номеров');
+                else if (page === 'Мои брони') alert('📋 Переход к истории бронирований');
+                else if (page === 'Профиль') alert('👤 Переход в личный кабинет');
+            });
+        });
+
+        // Ссылка "Войти"
+        const loginLink = document.querySelector('.login-link a');
+        if (loginLink) {
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('🔐 Переход на страницу входа');
+            });
+        }
+
+        // Обработка отправки формы с проверкой паролей
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(registerForm);
+            const name = formData.get('name');
+            const phone = formData.get('phone');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const passwordConfirm = formData.get('password_confirm');
+            
+            // Проверка совпадения паролей
+            if (password !== passwordConfirm) {
+                alert('❌ Ошибка: Пароли не совпадают!\n\nПожалуйста, введите одинаковые пароли.');
+                return;
+            }
+            
+            // Проверка минимальной длины пароля
+            if (password.length < 6) {
+                alert('❌ Ошибка: Пароль должен содержать минимум 6 символов!');
+                return;
+            }
+            
+            // В реальном проекте здесь был бы fetch или отправка формы
+            alert(`✅ Регистрация успешно выполнена!\n\nИмя: ${name}\nТелефон: ${phone}\nEmail: ${email}\nПароль: ${'*'.repeat(password.length)}\n\nДанные отправлены на сервер для создания аккаунта.`);
+            
+            // Раскомментировать для реальной отправки:
+            // this.submit();
+        });
+    </script>
+</body>
+</html>

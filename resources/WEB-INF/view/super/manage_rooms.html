@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Суперпользователь · Управление комнатами</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+           Без эмодзи (кроме логотипа)
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ СУПЕРПОЛЬЗОВАТЕЛЯ ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ФОРМА ДОБАВЛЕНИЯ НОВОЙ КОМНАТЫ ===== */
+        .add-section {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .add-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2B4B3E;
+            margin-bottom: 20px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .add-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 24px;
+            align-items: flex-end;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 150px;
+            gap: 6px;
+        }
+
+        .field-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-input {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            transition: 0.2s;
+        }
+        .field-input input,
+        .field-input select {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+        }
+        .field-input input::placeholder {
+            color: #B9C9BF;
+        }
+        .field-input:hover {
+            border-color: #BEC9B7;
+        }
+
+        .add-button {
+            background: #6C9A8B;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            height: 44px;
+            display: flex;
+            align-items: center;
+        }
+        .add-button:hover {
+            background: #588173;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ФИЛЬТРЫ ДЛЯ КОМНАТ ===== */
+        .filters-section {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .filter-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .filter-form {
+            width: 100%;
+        }
+
+        .filter-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px 20px;
+            align-items: flex-end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 130px;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-field {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+        }
+        .filter-field select,
+        .filter-field input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 13px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+        }
+
+        .filter-button {
+            background: #6C9A8B;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 22px;
+            font-weight: 600;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .filter-button:hover {
+            background: #588173;
+        }
+
+        /* ===== СПИСОК КОМНАТ ===== */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 12px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .list-header-left {
+            font-size: 20px;
+            font-weight: 650;
+            color: #2B4B3E;
+            background: transparent;
+            padding: 0;
+        }
+
+        .list-header-right {
+            background: #F0F1EC;
+            border-radius: 40px;
+            padding: 6px 20px;
+            color: #4C6F60;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .rooms-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 30px;
+        }
+
+        .rooms-table th {
+            background: #F6F4EF;
+            border-bottom: 2px solid #EDE8E0;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .rooms-table td {
+            background: transparent;
+            border-bottom: 1px solid #EDE8E0;
+            padding: 14px 12px;
+            font-size: 14px;
+            color: #4A6156;
+        }
+
+        .action-link {
+            background: transparent;
+            border: 1px solid #E8CFC2;
+            border-radius: 40px;
+            padding: 6px 20px;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #B67B5E;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .action-link:hover {
+            background: #F9EFE8;
+            border-color: #B67B5E;
+        }
+
+        /* ===== ПАГИНАЦИЯ ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .page-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 12px;
+            background: white;
+            border: 1px solid #DFD6CA;
+            border-radius: 44px;
+            color: #4A6A5B;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .page-item:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .page-item.active {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        /* Модальное окно для удаления */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid #EDE8E0;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 650;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+        }
+        .modal-text {
+            color: #4A6156;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+        .modal-btn.cancel-modal {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            color: #4A6A5B;
+        }
+        .modal-btn.cancel-modal:hover {
+            background: #F0F3EE;
+        }
+        .modal-btn.confirm {
+            background: #B67B5E;
+            color: white;
+        }
+        .modal-btn.confirm:hover {
+            background: #9E6248;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .add-form, .filter-grid {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .rooms-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация для суперпользователя -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">super</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Корпусы</a>
+                    <a href="#" class="nav-link">Администраторы</a>
+                    <a href="#" class="nav-link active">Комнаты</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">Управление комнатами</div>
+        </div>
+
+        <!-- Форма добавления новой комнаты -->
+        <div class="add-section">
+            <div class="add-header">Добавление новой комнаты</div>
+            <form class="add-form" id="addRoomForm" method="POST" action="">
+                <div class="form-field">
+                    <div class="field-label">Номер комнаты</div>
+                    <div class="field-input">
+                        <input type="text" name="room_number" placeholder="101" required>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="field-label">Этаж</div>
+                    <div class="field-input">
+                        <select name="floor">
+                            <option value="1">1 этаж</option>
+                            <option value="2">2 этаж</option>
+                            <option value="3">3 этаж</option>
+                            <option value="4">4 этаж</option>
+                            <option value="5">5 этаж</option>
+                            <option value="6">6 этаж</option>
+                            <option value="7">7 этаж</option>
+                            <option value="8">8 этаж</option>
+                            <option value="9">9 этаж</option>
+                            <option value="10">10 этаж</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <div class="field-label">Корпус</div>
+                    <div class="field-input">
+                        <select name="building">
+                            <option value="A">Корпус А</option>
+                            <option value="B">Корпус B</option>
+                            <option value="C">Корпус C</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="add-button">Добавить комнату</button>
+            </form>
+        </div>
+
+        <!-- Фильтры для комнат -->
+        <div class="filters-section">
+            <div class="filter-header">Фильтры</div>
+            <form class="filter-form" id="filterForm" method="GET" action="">
+                <div class="filter-grid">
+                    <div class="filter-item">
+                        <div class="filter-label">Корпус</div>
+                        <div class="filter-field">
+                            <select name="building">
+                                <option value="">Все корпуса</option>
+                                <option value="A">Корпус А</option>
+                                <option value="B">Корпус B</option>
+                                <option value="C">Корпус C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-label">Этаж</div>
+                        <div class="filter-field">
+                            <select name="floor">
+                                <option value="">Все этажи</option>
+                                <option value="1">1 этаж</option>
+                                <option value="2">2 этаж</option>
+                                <option value="3">3 этаж</option>
+                                <option value="4">4 этаж</option>
+                                <option value="5">5 этаж</option>
+                                <option value="6">6+ этаж</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="filter-button">Применить</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Заголовок списка -->
+        <div class="list-header">
+            <div class="list-header-left">Список комнат</div>
+            <div class="list-header-right" id="roomsCount">всего: 12 комнат</div>
+        </div>
+
+        <!-- Таблица комнат -->
+        <table class="rooms-table" id="roomsTable">
+            <thead>
+                <tr>
+                    <th>Номер комнаты</th>
+                    <th>Этаж</th>
+                    <th>Корпус</th>
+                    <th>Действия</th>
+                 </thead>
+            <tbody>
+                <tr data-room-id="1">
+                    <td class="room-number-cell">101</td>
+                    <td class="floor-cell">1</td>
+                    <td class="building-cell">Корпус А</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="101">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="2">
+                    <td class="room-number-cell">102</td>
+                    <td class="floor-cell">1</td>
+                    <td class="building-cell">Корпус А</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="102">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="3">
+                    <td class="room-number-cell">103</td>
+                    <td class="floor-cell">1</td>
+                    <td class="building-cell">Корпус А</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="103">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="4">
+                    <td class="room-number-cell">201</td>
+                    <td class="floor-cell">2</td>
+                    <td class="building-cell">Корпус А</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="201">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="5">
+                    <td class="room-number-cell">205</td>
+                    <td class="floor-cell">2</td>
+                    <td class="building-cell">Корпус А</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="205">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="6">
+                    <td class="room-number-cell">308</td>
+                    <td class="floor-cell">3</td>
+                    <td class="building-cell">Корпус B</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="308">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="7">
+                    <td class="room-number-cell">401</td>
+                    <td class="floor-cell">4</td>
+                    <td class="building-cell">Корпус C</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="401">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="8">
+                    <td class="room-number-cell">412</td>
+                    <td class="floor-cell">4</td>
+                    <td class="building-cell">Корпус C</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="412">Удалить</button>
+                    </td>
+                </tr>
+                <tr data-room-id="9">
+                    <td class="room-number-cell">501</td>
+                    <td class="floor-cell">5</td>
+                    <td class="building-cell">Корпус C</td>
+                    <td>
+                        <button class="action-link delete" data-action="delete" data-room-number="501">Удалить</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-item">1</a>
+            <a href="#" class="page-item active">2</a>
+            <a href="#" class="page-item">3</a>
+            <a href="#" class="page-item">4</a>
+            <a href="#" class="page-item">...</a>
+            <a href="#" class="page-item">8</a>
+        </div>
+
+        <div class="footer-placeholder">
+            HavenStay — система управления комнатами
+        </div>
+    </div>
+
+    <!-- Модальное окно для удаления -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-title">Удаление комнаты</div>
+            <div class="modal-text">
+                Вы действительно хотите удалить комнату <strong id="deleteRoomNumber"></strong>?
+                <br><br>
+                <span style="font-size: 14px; color: #B67B5E;">Это действие необратимо.</span>
+            </div>
+            <form id="deleteForm" method="POST" action="">
+                <input type="hidden" name="room_id" id="deleteRoomId">
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel-modal" id="closeDeleteModalBtn">Отмена</button>
+                    <button type="submit" class="modal-btn confirm">Удалить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Корпусы') alert('Переход к управлению корпусами');
+                else if (page === 'Администраторы') alert('Переход к управлению администраторами');
+                else if (page === 'Комнаты') alert('Вы уже на странице управления комнатами');
+            });
+        });
+
+        // Модальное окно для удаления
+        const deleteModal = document.getElementById('deleteModal');
+        const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteRoomId = document.getElementById('deleteRoomId');
+        const deleteRoomNumber = document.getElementById('deleteRoomNumber');
+        
+        let currentRowToDelete = null;
+        
+        function openDeleteModal(row, roomNumber) {
+            currentRowToDelete = row;
+            deleteRoomNumber.textContent = roomNumber;
+            deleteRoomId.value = row.getAttribute('data-room-id');
+            deleteModal.classList.add('active');
+        }
+        
+        function closeDeleteModal() {
+            deleteModal.classList.remove('active');
+            currentRowToDelete = null;
+        }
+        
+        closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+        
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+        
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (currentRowToDelete) {
+                const roomNumber = currentRowToDelete.querySelector('.room-number-cell').textContent;
+                currentRowToDelete.remove();
+                alert(`✅ Комната ${roomNumber} успешно удалена`);
+                closeDeleteModal();
+                
+                // Обновляем счетчик
+                const remainingRows = document.querySelectorAll('#roomsTable tbody tr').length;
+                const counterSpan = document.getElementById('roomsCount');
+                if (counterSpan) {
+                    counterSpan.textContent = `всего: ${remainingRows} комнат`;
+                }
+            }
+        });
+        
+        // Инициализация обработчиков для существующих кнопок удаления
+        const deleteButtons = document.querySelectorAll('.action-link.delete');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const row = this.closest('tr');
+                const roomNumber = this.getAttribute('data-room-number') || row.querySelector('.room-number-cell').textContent;
+                openDeleteModal(row, roomNumber);
+            });
+        });
+        
+        // Добавление новой комнаты
+        const addRoomForm = document.getElementById('addRoomForm');
+        addRoomForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(addRoomForm);
+            const roomNumber = formData.get('room_number');
+            const floor = formData.get('floor');
+            const building = formData.get('building');
+            
+            if (!roomNumber || !floor || !building) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            const tbody = document.querySelector('#roomsTable tbody');
+            const newRow = document.createElement('tr');
+            const newId = Date.now();
+            newRow.setAttribute('data-room-id', newId);
+            
+            const buildingNames = { 'A': 'Корпус А', 'B': 'Корпус B', 'C': 'Корпус C' };
+            const buildingName = buildingNames[building] || building;
+            
+            newRow.innerHTML = `
+                <td class="room-number-cell">${roomNumber}</td>
+                <td class="floor-cell">${floor}</td>
+                <td class="building-cell">${buildingName}</td>
+                <td>
+                    <button class="action-link delete" data-action="delete" data-room-number="${roomNumber}">Удалить</button>
+                </td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            const deleteBtn = newRow.querySelector('.action-link.delete');
+            deleteBtn.addEventListener('click', function() {
+                openDeleteModal(newRow, roomNumber);
+            });
+            
+            alert(`✅ Комната ${roomNumber} успешно добавлена!`);
+            addRoomForm.reset();
+            
+            // Обновляем счетчик
+            const remainingRows = document.querySelectorAll('#roomsTable tbody tr').length;
+            const counterSpan = document.getElementById('roomsCount');
+            if (counterSpan) {
+                counterSpan.textContent = `всего: ${remainingRows} комнат`;
+            }
+        });
+        
+        // Фильтры (демо)
+        const filterForm = document.getElementById('filterForm');
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(filterForm);
+            const building = formData.get('building') || 'все';
+            const floor = formData.get('floor') || 'все';
+            alert(`Фильтры применены\n\nКорпус: ${building === '' ? 'все' : building}\nЭтаж: ${floor === '' ? 'все' : floor}\n\n(демо-режим)`);
+        });
+        
+        // Пагинация
+        const pageItems = document.querySelectorAll('.page-item');
+        pageItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.classList.contains('active')) return;
+                pageItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                alert(`Загрузка страницы ${this.textContent}`);
+            });
+        });
+    </script>
+</body>
+</html>

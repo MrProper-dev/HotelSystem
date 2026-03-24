@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администратор · Список клиентов</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+           Без эмодзи (кроме логотипа)
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ АДМИНИСТРАТОРА ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ПОИСК КЛИЕНТОВ (ФОРМА) ===== */
+        .search-section {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .search-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2B4B3E;
+            margin-bottom: 20px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .search-form {
+            width: 100%;
+        }
+
+        .search-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 24px;
+            align-items: flex-end;
+        }
+
+        .search-item {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .search-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .search-field {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            transition: 0.2s;
+        }
+        .search-field:hover {
+            border-color: #BEC9B7;
+        }
+        .search-field input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+        }
+        .search-field input::placeholder {
+            color: #B9C9BF;
+        }
+
+        .search-button {
+            background: #6C9A8B;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            height: 44px;
+            display: flex;
+            align-items: center;
+        }
+        .search-button:hover {
+            background: #588173;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== СПИСОК КЛИЕНТОВ (ТАБЛИЦА) ===== */
+        .clients-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 12px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .clients-header-left {
+            font-size: 20px;
+            font-weight: 650;
+            color: #2B4B3E;
+            background: transparent;
+            padding: 0;
+        }
+
+        .clients-header-right {
+            background: #F0F1EC;
+            border-radius: 40px;
+            padding: 6px 20px;
+            color: #4C6F60;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .clients-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 30px;
+        }
+
+        .clients-table th {
+            background: #F6F4EF;
+            border-bottom: 2px solid #EDE8E0;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .clients-table td {
+            background: transparent;
+            border-bottom: 1px solid #EDE8E0;
+            padding: 14px 12px;
+            font-size: 14px;
+            color: #4A6156;
+        }
+
+        .client-status {
+            background: #E0F0E8;
+            border-radius: 40px;
+            padding: 4px 12px;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #4F7766;
+        }
+        .client-status.blocked {
+            background: #F9EFE8;
+            color: #B67B5E;
+        }
+
+        .action-link {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            border-radius: 40px;
+            padding: 6px 14px;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4A6A5B;
+            margin-right: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .action-link:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .action-link.block {
+            border-color: #E8CFC2;
+            color: #B67B5E;
+        }
+        .action-link.block:hover {
+            background: #F9EFE8;
+            border-color: #B67B5E;
+        }
+
+        /* ===== ПАГИНАЦИЯ ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .page-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 12px;
+            background: white;
+            border: 1px solid #DFD6CA;
+            border-radius: 44px;
+            color: #4A6A5B;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .page-item:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .page-item.active {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        /* Модальное окно для блокировки */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid #EDE8E0;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 650;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+        }
+        .modal-text {
+            color: #4A6156;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+        .modal-btn.cancel-modal {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            color: #4A6A5B;
+        }
+        .modal-btn.cancel-modal:hover {
+            background: #F0F3EE;
+        }
+        .modal-btn.confirm {
+            background: #B67B5E;
+            color: white;
+        }
+        .modal-btn.confirm:hover {
+            background: #9E6248;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .clients-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .search-grid {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-button {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация для администратора -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">admin</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Номерной фонд</a>
+                    <a href="#" class="nav-link active">Клиенты</a>
+                    <a href="#" class="nav-link">Статистика</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">Список клиентов</div>
+        </div>
+
+        <!-- Поиск клиентов (форма) -->
+        <div class="search-section">
+            <div class="search-header">Поиск клиентов</div>
+            <form class="search-form" method="GET" action="" id="searchForm">
+                <div class="search-grid">
+                    <div class="search-item">
+                        <div class="search-label">ФИО</div>
+                        <div class="search-field">
+                            <input type="text" name="fullname" placeholder="Иванов Иван" value="">
+                        </div>
+                    </div>
+                    <div class="search-item">
+                        <div class="search-label">Номер телефона</div>
+                        <div class="search-field">
+                            <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" value="">
+                        </div>
+                    </div>
+                    <div class="search-item">
+                        <div class="search-label">Паспортные данные</div>
+                        <div class="search-field">
+                            <input type="text" name="passport" placeholder="серия / номер" value="">
+                        </div>
+                    </div>
+                    <div class="search-item">
+                        <div class="search-label">Email</div>
+                        <div class="search-field">
+                            <input type="email" name="email" placeholder="example@mail.com" value="">
+                        </div>
+                    </div>
+                    <button type="submit" class="search-button">Найти</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Заголовок списка -->
+        <div class="clients-header">
+            <div class="clients-header-left">Зарегистрированные клиенты</div>
+            <div class="clients-header-right">найдено: 8 клиентов</div>
+        </div>
+
+        <!-- Таблица клиентов -->
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Дата рождения</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-user-id="1" data-user-name="Иванов Иван Иванович">
+                    <td>Иванов Иван Иванович</td>
+                    <td>+7 (900) 123-45-67</td>
+                    <td>ivanov@mail.com</td>
+                    <td>01.01.1990</td>
+                    <td><span class="client-status">Активен</span></td>
+                    <td>
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link block" data-action="block" data-user-id="1" data-user-name="Иванов Иван Иванович">Блокировать</button>
+                    </td>
+                </tr>
+                <tr data-user-id="2" data-user-name="Петров Петр Петрович">
+                    <td>Петров Петр Петрович</td>
+                    <td>+7 (911) 234-56-78</td>
+                    <td>petrov@mail.com</td>
+                    <td>15.03.1985</td>
+                    <td><span class="client-status blocked">Заблокирован</span></td>
+                    <td>
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link" data-action="unblock" data-user-id="2" data-user-name="Петров Петр Петрович">Разблокировать</button>
+                    </td>
+                </tr>
+                <tr data-user-id="3" data-user-name="Сидорова Анна Сергеевна">
+                    <td>Сидорова Анна Сергеевна</td>
+                    <td>+7 (922) 345-67-89</td>
+                    <td>sidorova@mail.com</td>
+                    <td>22.07.1992</td>
+                    <td><span class="client-status">Активен</span></td>
+                    <td>
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link block" data-action="block" data-user-id="3" data-user-name="Сидорова Анна Сергеевна">Блокировать</button>
+                    </td>
+                </tr>
+                <tr data-user-id="4" data-user-name="Козлов Дмитрий Николаевич">
+                    <td>Козлов Дмитрий Николаевич</td>
+                    <td>+7 (933) 456-78-90</td>
+                    <td>kozlov@mail.com</td>
+                    <td>05.11.1988</td>
+                    <td><span class="client-status">Активен</span></td>
+                    <td>
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link block" data-action="block" data-user-id="4" data-user-name="Козлов Дмитрий Николаевич">Блокировать</button>
+                    </td>
+                </tr>
+                <tr data-user-id="5" data-user-name="Морозова Елена Владимировна">
+                    <td>Морозова Елена Владимировна</td>
+                    <td>+7 (944) 567-89-01</td>
+                    <td>morozova@mail.com</td>
+                    <td>18.09.1995</td>
+                    <td><span class="client-status blocked">Заблокирован</span></td>
+                    <td>
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link" data-action="unblock" data-user-id="5" data-user-name="Морозова Елена Владимировна">Разблокировать</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-item">1</a>
+            <a href="#" class="page-item active">2</a>
+            <a href="#" class="page-item">3</a>
+            <a href="#" class="page-item">4</a>
+            <a href="#" class="page-item">...</a>
+            <a href="#" class="page-item">8</a>
+        </div>
+
+        <div class="footer-placeholder">
+            HavenStay — система управления клиентами
+        </div>
+    </div>
+
+    <!-- Модальное окно для блокировки/разблокировки -->
+    <div class="modal-overlay" id="actionModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">Блокировка пользователя</div>
+            <div class="modal-text" id="modalText">
+                Вы действительно хотите <span id="actionType"></span> пользователя <strong id="userNameSpan"></strong>?
+            </div>
+            <form id="actionForm" method="POST" action="">
+                <input type="hidden" name="user_id" id="actionUserId">
+                <input type="hidden" name="action" id="actionTypeValue">
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel-modal" id="closeModalBtn">Отмена</button>
+                    <button type="submit" class="modal-btn confirm" id="confirmBtn">Подтвердить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Номерной фонд') alert('Переход на страницу номерного фонда');
+                else if (page === 'Клиенты') alert('Вы уже на странице клиентов');
+                else if (page === 'Статистика') alert('Переход к статистике');
+            });
+        });
+
+        // Модальное окно для блокировки/разблокировки
+        const modalOverlay = document.getElementById('actionModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const actionForm = document.getElementById('actionForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const actionTypeSpan = document.getElementById('actionType');
+        const userNameSpan = document.getElementById('userNameSpan');
+        const actionUserId = document.getElementById('actionUserId');
+        const actionTypeValue = document.getElementById('actionTypeValue');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        function openModal(userId, userName, action) {
+            actionUserId.value = userId;
+            actionTypeValue.value = action;
+            userNameSpan.textContent = userName;
+            
+            if (action === 'block') {
+                modalTitle.textContent = 'Блокировка пользователя';
+                actionTypeSpan.textContent = 'заблокировать';
+                confirmBtn.textContent = 'Заблокировать';
+                confirmBtn.style.background = '#B67B5E';
+            } else {
+                modalTitle.textContent = 'Разблокировка пользователя';
+                actionTypeSpan.textContent = 'разблокировать';
+                confirmBtn.textContent = 'Разблокировать';
+                confirmBtn.style.background = '#4F7766';
+            }
+            
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Обработка кнопок блокировки/разблокировки
+        const blockButtons = document.querySelectorAll('[data-action="block"]');
+        const unblockButtons = document.querySelectorAll('[data-action="unblock"]');
+        
+        blockButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const userId = this.getAttribute('data-user-id');
+                const userName = this.getAttribute('data-user-name');
+                openModal(userId, userName, 'block');
+            });
+        });
+        
+        unblockButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const userId = this.getAttribute('data-user-id');
+                const userName = this.getAttribute('data-user-name');
+                openModal(userId, userName, 'unblock');
+            });
+        });
+
+        // Обработка отправки формы
+        actionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userId = actionUserId.value;
+            const action = actionTypeValue.value;
+            const userName = userNameSpan.textContent;
+            
+            const actionText = action === 'block' ? 'заблокирован' : 'разблокирован';
+            alert(`✅ Пользователь ${userName} успешно ${actionText}`);
+            closeModal();
+            
+            // Обновляем статус в таблице
+            const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+            if (row) {
+                const statusSpan = row.querySelector('.client-status');
+                const actionCell = row.querySelector('td:last-child');
+                
+                if (action === 'block') {
+                    statusSpan.textContent = 'Заблокирован';
+                    statusSpan.classList.add('blocked');
+                    actionCell.innerHTML = `
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link" data-action="unblock" data-user-id="${userId}" data-user-name="${userName}">Разблокировать</button>
+                    `;
+                } else {
+                    statusSpan.textContent = 'Активен';
+                    statusSpan.classList.remove('blocked');
+                    actionCell.innerHTML = `
+                        <a href="#" class="action-link" data-action="profile">Профиль</a>
+                        <button type="button" class="action-link block" data-action="block" data-user-id="${userId}" data-user-name="${userName}">Блокировать</button>
+                    `;
+                }
+                
+                // Переназначаем обработчики для новых кнопок
+                const newBlockBtn = actionCell.querySelector('[data-action="block"]');
+                const newUnblockBtn = actionCell.querySelector('[data-action="unblock"]');
+                if (newBlockBtn) {
+                    newBlockBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        openModal(userId, userName, 'block');
+                    });
+                }
+                if (newUnblockBtn) {
+                    newUnblockBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        openModal(userId, userName, 'unblock');
+                    });
+                }
+            }
+        });
+
+        // Кнопки "Профиль"
+        const profileLinks = document.querySelectorAll('[data-action="profile"]');
+        profileLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const row = this.closest('tr');
+                const userName = row ? row.querySelector('td:first-child').textContent : 'клиента';
+                alert(`Переход к карточке клиента: ${userName}`);
+            });
+        });
+
+        // Пагинация
+        const pageItems = document.querySelectorAll('.page-item');
+        pageItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.classList.contains('active')) return;
+                pageItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                alert(`Загрузка страницы ${this.textContent}`);
+            });
+        });
+
+        // Поиск (демо)
+        const searchForm = document.getElementById('searchForm');
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Поиск клиентов (демо-режим)');
+        });
+    </script>
+</body>
+</html>

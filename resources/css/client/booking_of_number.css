@@ -1,0 +1,504 @@
+/* ------------------------------
+    Мягкая цветовая гамма (как на предыдущих страницах)
+    Основной цвет: #6C9A8B
+    Акцент: #E8D9C5
+------------------------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #EFF3F0;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    max-width: 1280px;
+    width: 100%;
+    background-color: #FFFFFF;
+    border-radius: 32px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+    padding: 28px 32px;
+}
+
+/* ===== ВЕРХНЯЯ НАВИГАЦИЯ (без профиля) ===== */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E2E4DF;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo-block {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.logo-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #6C9A8B;
+    padding: 8px 20px 8px 16px;
+    border-radius: 60px;
+    box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+.logo-placeholder:hover {
+    transform: scale(1.02);
+}
+.logo-icon {
+    font-size: 28px;
+}
+.logo-text {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: white;
+}
+.logo-accent {
+    font-weight: 400;
+    font-size: 13px;
+    opacity: 0.85;
+    margin-left: 4px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-link {
+    background: transparent;
+    border: none;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4E46;
+    border-radius: 40px;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+.nav-link:hover {
+    background: #F0F3EE;
+    color: #2C5A4A;
+}
+.nav-link.active {
+    background: #6C9A8B;
+    color: white;
+    box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+}
+
+/* ===== ЗАГОЛОВОК ===== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 650;
+    color: #2B4B3E;
+    letter-spacing: -0.3px;
+    background: transparent;
+    padding: 0;
+}
+
+.back-link {
+    background: transparent;
+    border: 1px solid #DFD6CA;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #4A6A5B;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.back-link:hover {
+    background: #F0F3EE;
+    border-color: #C2CDBC;
+}
+
+/* ===== КОНТЕЙНЕР ФОРМЫ ===== */
+.booking-container {
+    background: #FDFBF8;
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 20px;
+    border: 1px solid #EDE8E0;
+}
+
+/* ===== ВЫБРАННАЯ КОМНАТА ===== */
+.selected-room-section {
+    margin-bottom: 32px;
+}
+
+.section-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2B4B3E;
+    margin-bottom: 16px;
+    padding-left: 4px;
+}
+
+.room-card-fixed {
+    display: flex;
+    gap: 24px;
+    border: 1px solid #EDE8E0;
+    border-radius: 24px;
+    background: #FFFFFF;
+    padding: 20px;
+    align-items: flex-start;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.room-photo {
+    width: 200px;
+    aspect-ratio: 4 / 3;
+    background: #E9EFE4;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.room-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.room-photo.no-image {
+    background: linear-gradient(135deg, #DDE3DB 0%, #CAD2C4 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #8AA79A;
+}
+.room-photo.no-image::before {
+    content: "🏨";
+    font-size: 48px;
+    opacity: 0.5;
+}
+
+.room-info-fixed {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+}
+
+.room-type {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2C5A4A;
+    background: transparent;
+    padding: 0;
+}
+
+.room-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.feature {
+    background: #F6F4EF;
+    border-radius: 40px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5B7868;
+}
+
+.room-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4F7766;
+    margin-top: 4px;
+}
+.room-price::before {
+    content: "₽";
+    font-size: 18px;
+    margin-right: 2px;
+}
+.price-per-day {
+    font-size: 14px;
+    font-weight: 400;
+    color: #8DAF9E;
+    margin-left: 6px;
+}
+
+/* ===== ДАТЫ (ФОРМА) ===== */
+.dates-section {
+    background: #F9F7F3;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 28px;
+    border: 1px solid #EDE8E0;
+}
+
+.dates-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-end;
+}
+
+.date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 220px;
+    flex: 1;
+}
+
+.date-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5B6F66;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.date-input {
+    background: white;
+    border: 1px solid #DFD9CF;
+    border-radius: 20px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+.date-input input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+    font-family: inherit;
+    color: #2D443B;
+    outline: none;
+}
+.date-input input:focus {
+    outline: none;
+}
+
+/* ===== ДАННЫЕ ГОСТЕЙ (ДИНАМИЧЕСКАЯ ФОРМА) ===== */
+.guests-section {
+    background: #F9F7F3;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 28px;
+    border: 1px solid #EDE8E0;
+}
+
+.guest-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #EDE8E0;
+}
+
+.guest-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.guest-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2C5A4A;
+    background: transparent;
+    padding: 0;
+}
+
+.remove-guest {
+    background: transparent;
+    border: 1px solid #DFD6CA;
+    border-radius: 40px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #B67B5E;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.remove-guest:hover {
+    background: #F9EFE8;
+    border-color: #B67B5E;
+}
+
+.guest-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5B6F66;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.field-input {
+    background: white;
+    border: 1px solid #DFD9CF;
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #2D443B;
+    outline: none;
+    transition: 0.2s;
+    width: 100%;
+}
+.field-input:focus {
+    border-color: #6C9A8B;
+    box-shadow: 0 0 0 2px rgba(108, 154, 139, 0.2);
+}
+
+.add-guest-button {
+    background: transparent;
+    border: 2px dashed #C2CDBC;
+    border-radius: 40px;
+    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #6C9A8B;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+.add-guest-button:hover {
+    background: #F0F3EE;
+    border-color: #6C9A8B;
+}
+
+/* ===== ИТОГО ===== */
+.summary-block {
+    background: #F0F3EE;
+    border-radius: 20px;
+    padding: 20px 24px;
+    margin: 24px 0 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.summary-item {
+    font-size: 15px;
+    color: #4A6156;
+    background: transparent;
+    padding: 0;
+}
+
+.total-price {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2C5A4A;
+    background: transparent;
+    padding: 0;
+}
+.total-price::before {
+    content: "₽";
+    font-size: 20px;
+    margin-right: 4px;
+}
+
+/* ===== КНОПКА ПОДТВЕРЖДЕНИЯ ===== */
+.confirm-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.button-primary {
+    background: #6C9A8B;
+    border: none;
+    border-radius: 60px;
+    padding: 14px 48px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.button-primary:hover {
+    background: #588173;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(108, 154, 139, 0.3);
+}
+
+.footer-placeholder {
+    margin-top: 30px;
+    border-top: 1px solid #EBE5DB;
+    padding: 24px 0 8px;
+    font-size: 13px;
+    color: #A7B8AE;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        padding: 20px;
+    }
+    .room-card-fixed {
+        flex-direction: column;
+    }
+    .room-photo {
+        width: 100%;
+    }
+    .guest-fields {
+        grid-template-columns: 1fr;
+    }
+    .top-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .logo-block {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

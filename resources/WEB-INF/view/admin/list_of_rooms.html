@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администратор · Номерной фонд</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+           Без эмодзи (кроме логотипа)
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ АДМИНИСТРАТОРА ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ФИЛЬТРЫ (РАСШИРЕННЫЕ) ===== */
+        .filters-section {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .filter-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2B4B3E;
+            margin-bottom: 20px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .filter-form {
+            width: 100%;
+        }
+
+        .filter-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 24px;
+            align-items: flex-end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 140px;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .filter-field {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            transition: 0.2s;
+        }
+        .filter-field:hover {
+            border-color: #BEC9B7;
+        }
+        .filter-field input,
+        .filter-field select {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+        }
+        .filter-field input::placeholder {
+            color: #B9C9BF;
+        }
+        .filter-field.small {
+            width: 120px;
+        }
+
+        .price-range {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .price-input {
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            height: 44px;
+            width: 100px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+        }
+        .price-input input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+        .price-range span {
+            color: #A6B9AE;
+            font-weight: 500;
+        }
+
+        .apply-filter {
+            background: #6C9A8B;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .apply-filter:hover {
+            background: #588173;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== СПИСОК КОМНАТ ===== */
+        .rooms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 12px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .rooms-header-left {
+            font-size: 20px;
+            font-weight: 650;
+            color: #2B4B3E;
+            background: transparent;
+            padding: 0;
+        }
+
+        .rooms-header-right {
+            background: #F0F1EC;
+            border-radius: 40px;
+            padding: 6px 20px;
+            color: #4C6F60;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .rooms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0 30px;
+        }
+
+        .room-row {
+            border: 1px solid #EDE8E0;
+            border-radius: 20px;
+            background: #FFFFFF;
+            padding: 16px 20px;
+            display: grid;
+            grid-template-columns: 0.8fr 1.8fr 1.2fr 1fr 0.9fr 1fr;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .room-row:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-color: #DFD6CA;
+        }
+
+        .room-field {
+            background: #F6F4EF;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #2D443B;
+            text-align: center;
+        }
+
+        .room-field.label {
+            background: #E9ECE6;
+            font-weight: 600;
+            color: #2C5A4A;
+        }
+
+        .status-badge {
+            background: #F6F4EF;
+            border-radius: 40px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #5B7868;
+        }
+        .status-badge.active {
+            background: #E0F0E8;
+            color: #4F7766;
+        }
+        .status-badge.occupied {
+            background: #F9EFE8;
+            color: #B67B5E;
+        }
+
+        .action-link {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            border-radius: 40px;
+            padding: 8px 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #4A6A5B;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+        .action-link:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+
+        /* ===== ПАГИНАЦИЯ ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .page-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 12px;
+            background: white;
+            border: 1px solid #DFD6CA;
+            border-radius: 44px;
+            color: #4A6A5B;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .page-item:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .page-item.active {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .room-row {
+                grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+                gap: 8px;
+                padding: 12px;
+            }
+            .room-field {
+                font-size: 12px;
+                padding: 6px 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .room-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .room-field {
+                text-align: left;
+            }
+            .filter-grid {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация для администратора -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">admin</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Номерной фонд</a>
+                    <a href="#" class="nav-link">Клиенты</a>
+                    <a href="#" class="nav-link">Статистика</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">Номерной фонд</div>
+        </div>
+
+        <!-- Фильтры (расширенные) -->
+        <div class="filters-section">
+            <div class="filter-header">Фильтры номеров</div>
+            <form class="filter-form" method="GET" action="">
+                <div class="filter-grid">
+                    <!-- даты -->
+                    <div class="filter-item">
+                        <div class="filter-label">Дата заезда</div>
+                        <div class="filter-field">
+                            <input type="date" name="checkin" value="2026-06-15">
+                        </div>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-label">Дата выезда</div>
+                        <div class="filter-field">
+                            <input type="date" name="checkout" value="2026-06-20">
+                        </div>
+                    </div>
+                    <!-- спальных мест -->
+                    <div class="filter-item">
+                        <div class="filter-label">Кол-во мест</div>
+                        <div class="filter-field small">
+                            <select name="capacity">
+                                <option value="">Любое</option>
+                                <option value="1">1 место</option>
+                                <option value="2">2 места</option>
+                                <option value="3">3 места</option>
+                                <option value="4">4 места</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- этаж -->
+                    <div class="filter-item">
+                        <div class="filter-label">Этаж</div>
+                        <div class="filter-field small">
+                            <select name="floor">
+                                <option value="">Любой</option>
+                                <option value="1">1 этаж</option>
+                                <option value="2">2 этаж</option>
+                                <option value="3">3 этаж</option>
+                                <option value="4">4 этаж</option>
+                                <option value="5">5 этаж</option>
+                                <option value="6">6+</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- корпус -->
+                    <div class="filter-item">
+                        <div class="filter-label">Корпус</div>
+                        <div class="filter-field">
+                            <select name="building">
+                                <option value="">Все корпуса</option>
+                                <option value="A">Корпус А</option>
+                                <option value="B">Корпус B</option>
+                                <option value="C">Корпус C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- цена -->
+                    <div class="filter-item">
+                        <div class="filter-label">Цена за сутки</div>
+                        <div class="price-range">
+                            <div class="price-input">
+                                <input type="number" name="price_min" placeholder="от" value="2000" step="500">
+                            </div>
+                            <span>—</span>
+                            <div class="price-input">
+                                <input type="number" name="price_max" placeholder="до" value="15000" step="500">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- статус брони (доп. фильтр для администратора) -->
+                    <div class="filter-item">
+                        <div class="filter-label">Статус номера</div>
+                        <div class="filter-field">
+                            <select name="status">
+                                <option value="">Все номера</option>
+                                <option value="active">Активны</option>
+                                <option value="free">Свободны</option>
+                                <option value="occupied">Заняты</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- кнопка применить -->
+                    <div class="filter-item">
+                        <button type="submit" class="apply-filter">Применить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Заголовок списка -->
+        <div class="rooms-header">
+            <div class="rooms-header-left">Список комнат</div>
+            <div class="rooms-header-right">найдено: 12 комнат</div>
+        </div>
+
+        <!-- СПИСОК КОМНАТ -->
+        <div class="rooms-list">
+            <!-- Заголовки колонок -->
+            <div class="room-row" style="background: #F9F7F3;">
+                <div class="room-field label">Номер</div>
+                <div class="room-field label">Тип / характеристики</div>
+                <div class="room-field label">Корпус / этаж</div>
+                <div class="room-field label">Цена за сутки</div>
+                <div class="room-field label">Статус</div>
+                <div class="room-field label">Действия</div>
+            </div>
+
+            <!-- Карточка 1 -->
+            <div class="room-row">
+                <div class="room-field">101</div>
+                <div class="room-field">Стандарт (2 места)</div>
+                <div class="room-field">Корпус А, 1 этаж</div>
+                <div class="room-field">2 800 ₽</div>
+                <div class="status-badge active">Свободен</div>
+                <a href="#" class="action-link">Подробнее</a>
+            </div>
+
+            <!-- Карточка 2 -->
+            <div class="room-row">
+                <div class="room-field">102</div>
+                <div class="room-field">Стандарт (2 места)</div>
+                <div class="room-field">Корпус А, 1 этаж</div>
+                <div class="room-field">2 800 ₽</div>
+                <div class="status-badge occupied">Занят</div>
+                <a href="#" class="action-link">Подробнее</a>
+            </div>
+
+            <!-- Карточка 3 -->
+            <div class="room-row">
+                <div class="room-field">205</div>
+                <div class="room-field">Люкс (2 места)</div>
+                <div class="room-field">Корпус А, 2 этаж</div>
+                <div class="room-field">4 200 ₽</div>
+                <div class="status-badge active">Свободен</div>
+                <a href="#" class="action-link">Подробнее</a>
+            </div>
+
+            <!-- Карточка 4 -->
+            <div class="room-row">
+                <div class="room-field">206</div>
+                <div class="room-field">Люкс (2 места)</div>
+                <div class="room-field">Корпус А, 2 этаж</div>
+                <div class="room-field">4 200 ₽</div>
+                <div class="status-badge occupied">Занят</div>
+                <a href="#" class="action-link">Подробнее</a>
+            </div>
+
+            <!-- Карточка 5 -->
+            <div class="room-row">
+                <div class="room-field">308</div>
+                <div class="room-field">Семейный (4 места)</div>
+                <div class="room-field">Корпус B, 3 этаж</div>
+                <div class="room-field">5 500 ₽</div>
+                <div class="status-badge active">Свободен</div>
+                <a href="#" class="action-link">Подробнее</a>
+            </div>
+
+            <!-- Карточка 6 -->
+            <div class="room-row">
+                <div class="room-field">401</div>
+                <div class="room-field">Президентский люкс</div>
+                <div class="room-field">Корпус C, 4 этаж</div>
+                <div class="room-field">12 000 ₽</div>
+                <div class="status-badge active">Свободен</div>
+                <a href="#" class="action-link">Подробнее</a>
+            </div>
+        </div>
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-item">1</a>
+            <a href="#" class="page-item active">2</a>
+            <a href="#" class="page-item">3</a>
+            <a href="#" class="page-item">4</a>
+            <a href="#" class="page-item">...</a>
+            <a href="#" class="page-item">8</a>
+        </div>
+
+        <div class="footer-placeholder">
+            HavenStay — система управления номерным фондом
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Номерной фонд') alert('Переход на страницу номерного фонда');
+                else if (page === 'Клиенты') alert('Переход к списку клиентов');
+                else if (page === 'Статистика') alert('Переход к статистике');
+            });
+        });
+
+        // Пагинация
+        const pageItems = document.querySelectorAll('.page-item');
+        pageItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (this.classList.contains('active')) return;
+                pageItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                alert(`Загрузка страницы ${this.textContent}`);
+            });
+        });
+
+        // Кнопки "Подробнее"
+        const actionLinks = document.querySelectorAll('.action-link');
+        actionLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Просмотр детальной информации о номере');
+            });
+        });
+
+        // Фильтры (демо)
+        const filterForm = document.querySelector('.filter-form');
+        if (filterForm) {
+            filterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Применены фильтры (демо-режим)');
+            });
+        }
+    </script>
+</body>
+</html>

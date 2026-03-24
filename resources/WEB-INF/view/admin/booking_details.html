@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администратор · Детали бронирования</title>
+    <style>
+        /* ------------------------------
+           Мягкая цветовая гамма
+           Основной цвет: #6C9A8B
+           Акцент: #E8D9C5
+           Без эмодзи (кроме логотипа)
+        ------------------------------ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #EFF3F0;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            background-color: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+            padding: 28px 32px;
+        }
+
+        /* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ АДМИНИСТРАТОРА ===== */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo-placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #6C9A8B;
+            padding: 8px 20px 8px 16px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .logo-placeholder:hover {
+            transform: scale(1.02);
+        }
+        .logo-icon {
+            font-size: 28px;
+        }
+        .logo-text {
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: white;
+        }
+        .logo-accent {
+            font-weight: 400;
+            font-size: 13px;
+            opacity: 0.85;
+            margin-left: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #3A4E46;
+            border-radius: 40px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            background: #F0F3EE;
+            color: #2C5A4A;
+        }
+        .nav-link.active {
+            background: #6C9A8B;
+            color: white;
+            box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 650;
+            color: #2B4B3E;
+            letter-spacing: -0.3px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .back-link {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            border-radius: 40px;
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #4A6A5B;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-link:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+        .detail-container {
+            background: #FDFBF8;
+            border-radius: 28px;
+            padding: 28px;
+            margin-bottom: 20px;
+            border: 1px solid #EDE8E0;
+        }
+
+        /* ===== СТАТУС БРОНИ ===== */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            background: #F9F7F3;
+            border-radius: 20px;
+            padding: 16px 24px;
+            border: 1px solid #EDE8E0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .status-label {
+            background: #F9EFE8;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #B67B5E;
+        }
+
+        .booking-number {
+            background: #F6F4EF;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5B7868;
+        }
+
+        /* ===== ВЫБРАННАЯ КОМНАТА ===== */
+        .selected-room-section {
+            margin-bottom: 32px;
+        }
+
+        .section-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+
+        .room-card-fixed {
+            display: flex;
+            gap: 24px;
+            border: 1px solid #EDE8E0;
+            border-radius: 24px;
+            background: #FFFFFF;
+            padding: 20px;
+            align-items: flex-start;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .room-photo {
+            width: 240px;
+            aspect-ratio: 4 / 3;
+            background: #E9EFE4;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .room-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .room-info-fixed {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .room-type {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2C5A4A;
+            background: transparent;
+            padding: 0;
+        }
+
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .feature {
+            background: #F6F4EF;
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5B7868;
+        }
+
+        .room-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4F7766;
+            margin-top: 4px;
+        }
+        .room-price::before {
+            content: "₽";
+            font-size: 16px;
+            margin-right: 2px;
+        }
+        .price-per-day {
+            font-size: 14px;
+            font-weight: 400;
+            color: #8DAF9E;
+            margin-left: 6px;
+        }
+
+        /* ===== ДАТЫ ===== */
+        .dates-section {
+            background: #F9F7F3;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .dates-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .date-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 20px;
+            padding: 12px 24px;
+            min-width: 260px;
+        }
+
+        .date-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .date-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2D443B;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ===== ДАННЫЕ ГОСТЕЙ (с возможностью добавления/удаления) ===== */
+        .guests-section {
+            background: #F9F7F3;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #EDE8E0;
+        }
+
+        .guest-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #EDE8E0;
+            position: relative;
+        }
+        .guest-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .guest-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .guest-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2C5A4A;
+            background: transparent;
+            padding: 0;
+        }
+
+        .remove-guest {
+            background: transparent;
+            border: 1px solid #E8CFC2;
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #B67B5E;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .remove-guest:hover {
+            background: #F9EFE8;
+            border-color: #B67B5E;
+        }
+
+        .guest-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5B6F66;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .field-input {
+            background: white;
+            border: 1px solid #DFD9CF;
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #2D443B;
+            outline: none;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .field-input:focus {
+            border-color: #6C9A8B;
+            box-shadow: 0 0 0 2px rgba(108, 154, 139, 0.2);
+        }
+        .field-input[type="date"] {
+            cursor: pointer;
+        }
+
+        .add-guest-button {
+            background: transparent;
+            border: 2px dashed #C2CDBC;
+            border-radius: 40px;
+            padding: 12px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #6C9A8B;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+        .add-guest-button:hover {
+            background: #F0F3EE;
+            border-color: #6C9A8B;
+        }
+
+        /* ===== ИТОГОВАЯ ИНФОРМАЦИЯ ===== */
+        .summary-block {
+            background: #F0F3EE;
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin: 24px 0 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .summary-item {
+            font-size: 15px;
+            color: #4A6156;
+            background: transparent;
+            padding: 0;
+        }
+
+        .total-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2C5A4A;
+            background: transparent;
+            padding: 0;
+        }
+        .total-price::before {
+            content: "₽";
+            font-size: 20px;
+            margin-right: 4px;
+        }
+
+        /* ===== КНОПКИ ДЕЙСТВИЙ ===== */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            border-radius: 60px;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #4A6A5B;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover {
+            background: #F0F3EE;
+            border-color: #C2CDBC;
+        }
+        .button.primary {
+            background: #6C9A8B;
+            border-color: #6C9A8B;
+            color: white;
+        }
+        .button.primary:hover {
+            background: #588173;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+        }
+        .button.cancel {
+            border-color: #E8CFC2;
+            color: #B67B5E;
+        }
+        .button.cancel:hover {
+            background: #F9EFE8;
+            border-color: #B67B5E;
+        }
+
+        .footer-placeholder {
+            margin-top: 30px;
+            border-top: 1px solid #EBE5DB;
+            padding: 24px 0 8px;
+            font-size: 13px;
+            color: #A7B8AE;
+            text-align: center;
+        }
+
+        /* Модальное окно для отмены */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid #EDE8E0;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 650;
+            color: #2B4B3E;
+            margin-bottom: 16px;
+        }
+        .modal-text {
+            color: #4A6156;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+        .modal-btn.cancel-modal {
+            background: transparent;
+            border: 1px solid #DFD6CA;
+            color: #4A6A5B;
+        }
+        .modal-btn.cancel-modal:hover {
+            background: #F0F3EE;
+        }
+        .modal-btn.confirm-cancel {
+            background: #B67B5E;
+            color: white;
+        }
+        .modal-btn.confirm-cancel:hover {
+            background: #9E6248;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px;
+            }
+            .room-card-fixed {
+                flex-direction: column;
+            }
+            .room-photo {
+                width: 100%;
+            }
+            .guest-fields {
+                grid-template-columns: 1fr;
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-block {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Верхняя навигация для администратора -->
+        <div class="top-nav">
+            <div class="logo-block">
+                <a href="#" class="logo-placeholder" style="text-decoration: none;">
+                    <span class="logo-icon">🏡</span>
+                    <span class="logo-text">HavenStay<span class="logo-accent">admin</span></span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Номерной фонд</a>
+                    <a href="#" class="nav-link">Клиенты</a>
+                    <a href="#" class="nav-link">Статистика</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <div class="page-title">Детали бронирования</div>
+            <a href="#" class="back-link">← Назад к списку</a>
+        </div>
+
+        <!-- Основной контейнер -->
+        <div class="detail-container">
+            <form id="bookingForm" method="POST" action="">
+                <!-- Строка статуса и номера брони (статус не редактируется) -->
+                <div class="status-bar">
+                    <div class="status-label">Отменено</div>
+                    <div class="booking-number">Бронь № BR-2026-1234</div>
+                    <input type="hidden" name="booking_id" value="1234">
+                </div>
+
+                <!-- 1. Выбранная комната (не редактируется) -->
+                <div class="selected-room-section">
+                    <div class="section-label">Выбранная комната</div>
+                    <div class="room-card-fixed">
+                        <div class="room-photo">
+                            <img src="https://placehold.co/400x300/E8D9C5/6C9A8B?text=Стандарт+Лайт" alt="Стандарт Лайт">
+                        </div>
+                        <div class="room-info-fixed">
+                            <div class="room-type">Стандарт "Лайт"</div>
+                            <div class="room-features">
+                                <span class="feature">2 спальных места</span>
+                                <span class="feature">3 этаж</span>
+                                <span class="feature">корпус А</span>
+                            </div>
+                            <div class="room-price">4 200 <span class="price-per-day">/ сутки</span></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="room_id" value="205">
+                    <input type="hidden" name="room_name" value="Стандарт Лайт">
+                    <input type="hidden" name="price_per_night" value="4200" id="pricePerNight">
+                </div>
+
+                <!-- 2. Даты (не редактируются, только для просмотра) -->
+                <div class="section-label">Даты проживания</div>
+                <div class="dates-section">
+                    <div class="dates-container">
+                        <div class="date-row">
+                            <span class="date-label">Заезд:</span>
+                            <span class="date-value">15 июня 2026</span>
+                        </div>
+                        <div class="date-row">
+                            <span class="date-label">Выезд:</span>
+                            <span class="date-value">20 июня 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Данные гостей (с возможностью добавлять и удалять) -->
+                <div class="section-label">Данные гостей</div>
+                <div class="guests-section" id="guestsSection">
+                    <div id="guestsContainer">
+                        <!-- Гость 1 -->
+                        <div class="guest-card" data-guest-id="0">
+                            <div class="guest-header">
+                                <div class="guest-title">Гость 1</div>
+                                <button type="button" class="remove-guest" data-guest-index="0">Удалить</button>
+                            </div>
+                            <div class="guest-fields">
+                                <div class="field-group">
+                                    <div class="field-label">Фамилия</div>
+                                    <input type="text" class="field-input" name="guests[0][surname]" value="Иванов" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Имя</div>
+                                    <input type="text" class="field-input" name="guests[0][name]" value="Иван" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Отчество</div>
+                                    <input type="text" class="field-input" name="guests[0][patronymic]" value="Иванович">
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Дата рождения</div>
+                                    <input type="date" class="field-input" name="guests[0][birthdate]" value="1990-01-01" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Серия паспорта / свид. о рождении</div>
+                                    <input type="text" class="field-input" name="guests[0][doc_series]" value="1234" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Номер паспорта / свид. о рождении</div>
+                                    <input type="text" class="field-input" name="guests[0][doc_number]" value="567890" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Гость 2 -->
+                        <div class="guest-card" data-guest-id="1">
+                            <div class="guest-header">
+                                <div class="guest-title">Гость 2</div>
+                                <button type="button" class="remove-guest" data-guest-index="1">Удалить</button>
+                            </div>
+                            <div class="guest-fields">
+                                <div class="field-group">
+                                    <div class="field-label">Фамилия</div>
+                                    <input type="text" class="field-input" name="guests[1][surname]" value="Петрова" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Имя</div>
+                                    <input type="text" class="field-input" name="guests[1][name]" value="Анна" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Отчество</div>
+                                    <input type="text" class="field-input" name="guests[1][patronymic]" value="Сергеевна">
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Дата рождения</div>
+                                    <input type="date" class="field-input" name="guests[1][birthdate]" value="1992-05-15" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Серия пасп. / свид. о рожд.</div>
+                                    <input type="text" class="field-input" name="guests[1][doc_series]" value="5678" required>
+                                </div>
+                                <div class="field-group">
+                                    <div class="field-label">Номер пасп. / свид. о рожд.</div>
+                                    <input type="text" class="field-input" name="guests[1][doc_number]" value="123456" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="add-guest-button" id="addGuestBtn">+ Добавить гостя</button>
+                </div>
+
+                <!-- Итоговая стоимость -->
+                <div class="summary-block">
+                    <div class="summary-item">5 ночей</div>
+                    <div class="summary-item" id="guestsCount">2 гостя</div>
+                    <div class="total-price">21 000</div>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="action-buttons">
+                    <button type="button" class="button cancel" id="cancelBookingBtn">Отменить бронь</button>
+                    <button type="submit" class="button primary">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer-placeholder">
+            HavenStay — система управления бронированиями
+        </div>
+    </div>
+
+    <!-- Модальное окно для отмены бронирования -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal-content">
+            <div class="modal-title">Отмена бронирования</div>
+            <div class="modal-text">
+                Вы действительно хотите отменить бронирование № <strong>BR-2026-1234</strong>?
+                <br><br>
+                <span style="font-size: 14px; color: #B67B5E;">Внимание: при отмене менее чем за 24 часа до заезда взимается штраф в размере 100% от первой ночи.</span>
+            </div>
+            <form id="cancelForm" method="POST" action="">
+                <input type="hidden" name="booking_id" value="1234">
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel-modal" id="closeModalBtn">Отмена</button>
+                    <button type="submit" class="modal-btn confirm-cancel">Подтвердить отмену</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.textContent.trim();
+                if (page === 'Номерной фонд') alert('Переход на страницу номерного фонда');
+                else if (page === 'Клиенты') alert('Переход к списку клиентов');
+                else if (page === 'Статистика') alert('Переход к статистике');
+            });
+        });
+
+        // Кнопка "Назад"
+        const backLink = document.querySelector('.back-link');
+        if (backLink) {
+            backLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Возврат к списку бронирований');
+            });
+        }
+
+        // Динамическое добавление и удаление гостей
+        let guestCounter = 2;
+        const guestsContainer = document.getElementById('guestsContainer');
+        const addGuestBtn = document.getElementById('addGuestBtn');
+        const guestsCountSpan = document.getElementById('guestsCount');
+
+        function updateGuestsCount() {
+            const guestCards = document.querySelectorAll('#guestsContainer .guest-card');
+            const count = guestCards.length;
+            const text = getGuestsText(count);
+            guestsCountSpan.textContent = text;
+        }
+
+        function getGuestsText(count) {
+            if (count === 1) return '1 гость';
+            if (count >= 2 && count <= 4) return `${count} гостя`;
+            return `${count} гостей`;
+        }
+
+        function createGuestCard(index) {
+            const guestCard = document.createElement('div');
+            guestCard.className = 'guest-card';
+            guestCard.setAttribute('data-guest-id', index);
+            
+            guestCard.innerHTML = `
+                <div class="guest-header">
+                    <div class="guest-title">Гость ${index + 1}</div>
+                    <button type="button" class="remove-guest" data-guest-index="${index}">Удалить</button>
+                </div>
+                <div class="guest-fields">
+                    <div class="field-group">
+                        <div class="field-label">Фамилия</div>
+                        <input type="text" class="field-input" name="guests[${index}][surname]" placeholder="Иванов" required>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Имя</div>
+                        <input type="text" class="field-input" name="guests[${index}][name]" placeholder="Иван" required>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Отчество</div>
+                        <input type="text" class="field-input" name="guests[${index}][patronymic]" placeholder="Иванович">
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Дата рождения</div>
+                        <input type="date" class="field-input" name="guests[${index}][birthdate]" required>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Серия пасп. / свид. о рожд.</div>
+                        <input type="text" class="field-input" name="guests[${index}][doc_series]" placeholder="1234" required>
+                    </div>
+                    <div class="field-group">
+                        <div class="field-label">Номер пасп. / свид. о рожд.</div>
+                        <input type="text" class="field-input" name="guests[${index}][doc_number]" placeholder="567890" required>
+                    </div>
+                </div>
+            `;
+            
+            const removeBtn = guestCard.querySelector('.remove-guest');
+            removeBtn.addEventListener('click', function() {
+                guestCard.remove();
+                reindexGuests();
+                updateGuestsCount();
+            });
+            
+            return guestCard;
+        }
+
+        function reindexGuests() {
+            const guestCards = document.querySelectorAll('#guestsContainer .guest-card');
+            guestCards.forEach((card, idx) => {
+                const newIndex = idx;
+                const titleDiv = card.querySelector('.guest-title');
+                titleDiv.textContent = `Гость ${newIndex + 1}`;
+                card.setAttribute('data-guest-id', newIndex);
+                
+                const inputs = card.querySelectorAll('input');
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        const newName = name.replace(/guests\[\d+\]/, `guests[${newIndex}]`);
+                        input.setAttribute('name', newName);
+                    }
+                });
+                
+                const removeBtn = card.querySelector('.remove-guest');
+                if (removeBtn) {
+                    removeBtn.setAttribute('data-guest-index', newIndex);
+                    const newRemoveBtn = removeBtn.cloneNode(true);
+                    removeBtn.parentNode.replaceChild(newRemoveBtn, removeBtn);
+                    newRemoveBtn.addEventListener('click', function() {
+                        card.remove();
+                        reindexGuests();
+                        updateGuestsCount();
+                    });
+                }
+            });
+            guestCounter = guestCards.length;
+            updateGuestsCount();
+        }
+
+        addGuestBtn.addEventListener('click', () => {
+            const currentCount = document.querySelectorAll('#guestsContainer .guest-card').length;
+            const newGuest = createGuestCard(currentCount);
+            guestsContainer.appendChild(newGuest);
+            reindexGuests();
+        });
+
+        // Инициализация удаления для существующих гостей
+        const removeButtons = document.querySelectorAll('.remove-guest');
+        removeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const card = this.closest('.guest-card');
+                card.remove();
+                reindexGuests();
+                updateGuestsCount();
+            });
+        });
+        
+        updateGuestsCount();
+
+        // Модальное окно для отмены бронирования
+        const modalOverlay = document.getElementById('cancelModal');
+        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelForm = document.getElementById('cancelForm');
+
+        if (cancelBookingBtn) {
+            cancelBookingBtn.addEventListener('click', function() {
+                modalOverlay.classList.add('active');
+            });
+        }
+
+        closeModalBtn.addEventListener('click', function() {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+
+        cancelForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('✅ Бронирование успешно отменено!');
+            modalOverlay.classList.remove('active');
+        });
+
+        // Обработка отправки формы
+        const bookingForm = document.getElementById('bookingForm');
+        bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(bookingForm);
+            let dataString = '';
+            for (let [key, value] of formData.entries()) {
+                dataString += `${key}: ${value}\n`;
+            }
+            alert(`✅ Данные бронирования успешно обновлены!\n\nСервер получил:\n${dataString}`);
+        });
+    </script>
+</body>
+</html>
