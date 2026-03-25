@@ -1,9 +1,20 @@
 // Динамический расчет стоимости и количества ночей
-        const pricePerNight = 4200;
+        const pricePerNight = document.getElementById('pricePerNight').getAttribute("price");
         const checkinInput = document.getElementById('checkin');
         const checkoutInput = document.getElementById('checkout');
         const nightsSummary = document.getElementById('nightsSummary');
         const totalPriceSpan = document.getElementById('totalPrice');
+        const roomId = document.getElementById('roomId');
+
+        const infoModal    = document.getElementById("infoModal");
+        const infoModalOk  = document.getElementById("infoModalOk");
+        const infoModalText = document.getElementById("infoModalText");
+
+        const confirmModal     = document.getElementById("confirmModal");
+        const confirmModalOk   = document.getElementById("confirmModalOk");
+        const confirmModalCancel = document.getElementById("confirmModalCancel");
+        const confirmModalText  = document.getElementById("confirmModalText");
+
 
         function calculateNights() {
             const checkin = new Date(checkinInput.value);
@@ -48,11 +59,11 @@
                 <div class="guest-fields">
                     <div class="field-group">
                         <div class="field-label">Фамилия</div>
-                        <input type="text" class="field-input" name="guests[${index}][surname]" placeholder="Иванов" required>
+                        <input type="text" class="field-input" name="guests[${index}][last_name]" placeholder="Иванов" required>
                     </div>
                     <div class="field-group">
                         <div class="field-label">Имя</div>
-                        <input type="text" class="field-input" name="guests[${index}][name]" placeholder="Иван" required>
+                        <input type="text" class="field-input" name="guests[${index}][first_name]" placeholder="Иван" required>
                     </div>
                     <div class="field-group">
                         <div class="field-label">Отчество</div>
@@ -64,16 +75,15 @@
                     </div>
                     <div class="field-group">
                         <div class="field-label">Серия пасп. / свид. о рожд.</div>
-                        <input type="text" class="field-input" name="guests[${index}][passport_series]" placeholder="1234 / I-АЮ" required>
+                        <input type="text" class="field-input" name="guests[${index}][doc_series]" placeholder="1234 / I-АЮ" required>
                     </div>
                     <div class="field-group">
                         <div class="field-label">Номер пасп. / свид. о рожд.</div>
-                        <input type="text" class="field-input" name="guests[${index}][passport_number]" placeholder="567890" required>
+                        <input type="text" class="field-input" name="guests[${index}][doc_number]" placeholder="567890" required>
                     </div>
                 </div>
             `;
             
-            // Добавляем обработчик для кнопки удаления
             const removeBtn = guestCard.querySelector('.remove-guest');
             removeBtn.addEventListener('click', function() {
                 guestCard.remove();
@@ -91,7 +101,6 @@
                 titleDiv.textContent = `Гость ${newIndex + 1}`;
                 card.setAttribute('data-guest-id', newIndex + 1);
                 
-                // Переименовываем все поля ввода
                 const inputs = card.querySelectorAll('input');
                 inputs.forEach(input => {
                     const name = input.getAttribute('name');
@@ -101,7 +110,6 @@
                     }
                 });
                 
-                // Обновляем кнопку удаления
                 const removeBtn = card.querySelector('.remove-guest');
                 if (removeBtn) {
                     removeBtn.setAttribute('data-guest-index', newIndex);
@@ -116,8 +124,46 @@
             guestsContainer.appendChild(newGuest);
         });
 
-        // Удаление гостя (для первого гостя тоже можно добавить, но для первого сделаем отдельно)
-        // Добавляем возможность удалить и первого гостя, если нужно
+        function info(infotmation){
+            return new Promise((resolve) =>{
+                infoModalText.textContent = infotmation;
+                infoModal.showModal();
+
+                const onOK = () =>{
+                    infoModal.close();
+                    infoModalOk.removeEventListener("click", onOK);
+                    resolve();
+                };
+
+                infoModalOk.addEventListener("click", onOK);
+            });
+        }
+
+        function confirm(question){
+            return new Promise((resolve) => {
+                confirmModalText.textContent = question;
+                confirmModal.showModal();
+
+                const onConfirm = () => {
+                    confirmModal.close();
+                    confirmModalOk.removeEventListener("click", onConfirm);
+                    confirmModalCancel.removeEventListener("click", onCancel);
+                    resolve(true);
+                };
+
+                const onCancel = () => {
+                    confirmModal.close();
+                    confirmModalOk.removeEventListener("click", onConfirm);
+                    confirmModalCancel.removeEventListener("click", onCancel);
+                    resolve(false);
+                };
+
+                confirmModalOk.addEventListener("click", onConfirm);
+                confirmModalCancel.addEventListener("click", onCancel);
+            });
+        }
+
+        // Удаление гостя
         const firstRemoveBtn = document.querySelector('#guestsContainer .guest-card .remove-guest');
         if (firstRemoveBtn) {
             firstRemoveBtn.addEventListener('click', function() {
@@ -132,30 +178,46 @@
         }
 
         // Обработка отправки формы
-        // const bookingForm = document.getElementById('bookingForm');
-        // bookingForm.addEventListener('submit', function(e) {
-        //     e.preventDefault();
+        const bookingForm = document.getElementById('bookingForm');
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-        //     const nights = calculateNights();
-        //     if (nights <= 0) {
-        //         alert('Пожалуйста, укажите корректные даты проживания');
-        //         return;
-        //     }
+            const nights = calculateNights();
+            if (nights <= 0) {
+                const information = 'Пожалуйста, укажите корректные даты проживания';
+                await info(information);
+                return;
+            }
+
+            const id = roomId.value;
+            const formData = new URLSearchParams();
+            formData.append("check_in", checkinInput.value);
+            formData.append("check_out", checkoutInput.value);
+            const answer = await fetch(`/hotelsystem/checkbooking/api/v1/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            });
+
+            if(!answer.ok){
+                const information = 'Что-то не так, попробуйе позже.'
+                await info(information);
+                return;
+            }
+
+            const json = await answer.json();
+
+            if(json.availability !== "true"){
+                const information = 'Выбранные даты недоступны.'
+                await info(information);
+                return;
+            }
             
-        //     const total = nights * pricePerNight;
             
-        //     // Собираем данные для отправки
-        //     const formData = new FormData(bookingForm);
-        //     formData.append('total_nights', nights);
-        //     formData.append('total_price', total);
-            
-        //     // Имитация отправки на сервер
-        //     alert(`Бронирование успешно создано!\n\nКомната: Стандарт "Лайт"\nКоличество ночей: ${nights}\nИтоговая сумма: ${total.toLocaleString('ru-RU')} ₽\n\nДанные отправлены на сервер.`);
-            
-        //     // Здесь можно раскомментировать для реальной отправки:
-        //     // fetch('/api/bookings', {
-        //     //     method: 'POST',
-        //     //     body: formData
-        //     // }).then(response => response.json())
-        //     //   .then(data => console.log(data));
-        // });
+            const information = 'Перед отправкой убедитесь, что все данные заполнены корректно.';
+            if(!await confirm(information)){
+                return;
+            }else{
+                bookingForm.submit();  
+            }   
+        });

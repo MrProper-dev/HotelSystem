@@ -36,8 +36,8 @@
 
         <!-- Основной контейнер -->
         <div class="booking-container">
-            <form id="bookingForm" method="get" action="some">
-                <!-- 1. Выбранная комната -->
+            <form id="bookingForm" method="post" action="">
+                <!-- Выбранная комната -->
                 <div class="selected-room-section">
                     <div class="section-label">Выбранная комната</div>
                     <div class="room-card-fixed">
@@ -55,33 +55,32 @@
                                 <span class="feature">🏢 ${room.floor} этаж</span>
                                 <span class="feature">🏛️ ${room.building.name}</span>
                             </div>
-                            <div class="room-price">${room.price} <span class="price-per-day">/ сутки</span></div>
+                            <div class="room-price" id="pricePerNight" price="${room.price}">${room.price} <span class="price-per-day">/ сутки</span></div>
                         </div>
                     </div>
-                    <input type="hidden" name="room_id" value="${room.id}">
-                    <input type="hidden" name="price_per_night" value="4200" id="pricePerNight">
+                    <input type="hidden" name="room_id" value="${room.id}" id="roomId">
                 </div>
 
-                <!-- 2. Даты (форма с полями ввода) -->
+                <!-- Даты  -->
                 <div class="section-label">Даты проживания</div>
                 <div class="dates-section">
                     <div class="dates-grid">
                         <div class="date-field">
                             <div class="date-label">Дата заезда</div>
                             <div class="date-input">
-                                <input type="date" name="checkin" id="checkin" value="2026-06-15" required>
+                                <input type="date" name="checkin" id="checkin" value="" required>
                             </div>
                         </div>
                         <div class="date-field">
                             <div class="date-label">Дата выезда</div>
                             <div class="date-input">
-                                <input type="date" name="checkout" id="checkout" value="2026-06-20" required>
+                                <input type="date" name="checkout" id="checkout" value="" required>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Данные гостей (динамическое добавление) -->
+                <!-- Данные гостей -->
                 <div class="section-label">Данные гостей</div>
                 <div class="guests-section" id="guestsSection">
                     <div id="guestsContainer">
@@ -93,11 +92,11 @@
                             <div class="guest-fields">
                                 <div class="field-group">
                                     <div class="field-label">Фамилия</div>
-                                    <input type="text" class="field-input" name="guests[0][surname]" placeholder="Иванов" required>
+                                    <input type="text" class="field-input" name="guests[0][last_name]" placeholder="Иванов" required>
                                 </div>
                                 <div class="field-group">
                                     <div class="field-label">Имя</div>
-                                    <input type="text" class="field-input" name="guests[0][name]" placeholder="Иван" required>
+                                    <input type="text" class="field-input" name="guests[0][first_name]" placeholder="Иван" required>
                                 </div>
                                 <div class="field-group">
                                     <div class="field-label">Отчество</div>
@@ -109,11 +108,11 @@
                                 </div>
                                 <div class="field-group">
                                     <div class="field-label">Серия пасп. / свид. о рожд.</div>
-                                    <input type="text" class="field-input" name="guests[0][passport_series]" placeholder="1234 / I-АЮ" required>
+                                    <input type="text" class="field-input" name="guests[0][doc_series]" placeholder="1234 / I-АЮ" required>
                                 </div>
                                 <div class="field-group">
                                     <div class="field-label">Номер пасп. / свид. о рожд.</div>
-                                    <input type="text" class="field-input" name="guests[0][passport_number]" placeholder="567890" required>
+                                    <input type="text" class="field-input" name="guests[0][doc_number]" placeholder="567890" required>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +122,7 @@
 
                 <!-- Итоговая стоимость -->
                 <div class="summary-block" id="summaryBlock">
-                    <div class="summary-item" id="roomSummary">Комната: Стандарт "Лайт"</div>
+                    <div class="summary-item" id="roomSummary">Номер: ${room.number}</div>
                     <div class="summary-item" id="nightsSummary">0 ночей</div>
                     <div class="total-price" id="totalPrice">0</div>
                 </div>
@@ -135,6 +134,29 @@
             </form>
         </div>
 
+        <!-- модальное окно (info) -->
+        <dialog id="infoModal" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="infoModalText">Сообщение по умолчанию.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="infoModalOk" class="button-primary">ОК</button>
+                </div>
+            </div>
+        </dialog>
+        <!-- модальное окно (confirm) -->
+        <dialog id="confirmModal" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="confirmModalText">Подтвердите действие.</p>
+                </div>
+                <div class="modal-footer confirm-buttons">
+                    <button id="confirmModalCancel" class="button-primary">Отмена</button>
+                    <button id="confirmModalOk" class="button-primary">Бронь</button>
+                </div>
+            </div>
+        </dialog>
         <div class="footer-placeholder">
             🌿 HavenStay — тишина, комфорт и забота о каждом госте
         </div>

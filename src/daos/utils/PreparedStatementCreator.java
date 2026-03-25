@@ -11,11 +11,13 @@ public class PreparedStatementCreator{
     
     private List<Object> params;
     private StringBuilder root;
+    private StringBuilder values;
     private StringBuilder where;
     private StringBuilder end;
 
     public PreparedStatementCreator(String select){
         root = new StringBuilder(select);
+        values = new StringBuilder();
         where = new StringBuilder();
         end = new StringBuilder();
         params = new ArrayList<>();
@@ -24,6 +26,17 @@ public class PreparedStatementCreator{
     public void addWhereAndCondition(String condition){
         where.append(" AND ");
         where.append(condition);
+    }
+
+    public void addValue(String value){
+        values.append(" ");
+        values.append(value);
+        values.append(",");
+    }
+
+    public void addReturning(String value){
+        end.append(" RETURNING ");
+        end.append(value);
     }
     
     public void addLimit(){
@@ -43,6 +56,12 @@ public class PreparedStatementCreator{
             where.delete(0, 5);
             where.insert(0, " WHERE ");
         }
+
+        if(!values.isEmpty()){
+            values.delete(values.length()-1, values.length());
+        }
+
+        root.append(values.toString());
         where.append(end.toString());
         root.append(where.toString());
         

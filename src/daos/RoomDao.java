@@ -26,6 +26,24 @@ public class RoomDao {
         return instance;
     }
 
+    public Float getPriceById(Integer id){
+        final String root = "SELECT price FROM rooms";
+        PreparedStatementCreator creator = new PreparedStatementCreator(root);
+        if(id == null){
+            throw new RuntimeException("Room id can`t be null");
+        }
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(id);
+        try (Connection connection = connectionProvider.getConnection()) {
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery();
+            result.next();
+            return result.getFloat(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting room price failed", e);
+        }
+    }
+
     public RoomDto getRoomById(Integer roomId){
         final String query = "SELECT r.*, b.name FROM rooms r JOIN buildings b ON r.building_id=b.id";
         final PreparedStatementCreator creator = new PreparedStatementCreator(query);
