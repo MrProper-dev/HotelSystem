@@ -22,8 +22,8 @@
                 </a>
                 <div class="nav-links">
                     <a href="/hotelsystem/rooms" class="nav-link">Комнаты</a>
-                    <a href="#" class="nav-link">Мои брони</a>
-                    <a href="#" class="nav-link">Профиль</a>
+                    <a href="/hotelsystem/booking/history" class="nav-link">Мои брони</a>
+                    <a href="/hotelsystem/profile" class="nav-link">Профиль</a>
                 </div>
             </div>
         </div>
@@ -152,7 +152,7 @@
                     <p id="confirmModalText">Подтвердите действие.</p>
                 </div>
                 <div class="modal-footer confirm-buttons">
-                    <button id="confirmModalCancel" class="button-primary">Отмена</button>
+                    <button id="confirmModalCancel" class="button-primary">Назад</button>
                     <button id="confirmModalOk" class="button-primary">Бронь</button>
                 </div>
             </div>

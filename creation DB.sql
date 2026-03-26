@@ -39,16 +39,6 @@ CREATE TABLE clients (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_log_in TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE passports (
-    id SERIAL PRIMARY KEY,
-    client_id INT REFERENCES clients(id) ON DELETE CASCADE,
-    series VARCHAR(4) NOT NULL,
-	number VARCHAR(6) NOT NULL,
-    full_name VARCHAR(255) NOT NULL,
-    birth_date DATE NOT NULL,
-    issuer_code VARCHAR(7) NOT NULL,
-    issue_date DATE NOT NULL
-);
 CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
     client_id INT REFERENCES clients(id) ON DELETE CASCADE,

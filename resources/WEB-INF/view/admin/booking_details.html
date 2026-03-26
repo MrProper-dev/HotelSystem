@@ -590,6 +590,26 @@
         .modal-btn.confirm-cancel:hover {
             background: #9E6248;
         }
+        
+        .logout-link {
+            background: #E8D9C5;
+            color: #2C4D3C;
+            border: 1px solid #D0C3B0;
+        }
+        .logout-link:hover {
+            background: #D0C3B0;
+            color: #203326;
+        }
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E2E4DF;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
         @media (max-width: 768px) {
             .app-container {
@@ -636,6 +656,9 @@
                     <a href="#" class="nav-link">Статистика</a>
                 </div>
             </div>
+            <form action="/hotelsystem/admin/logout" method="get" class="logout-form">
+                <button type="submit" class="nav-link logout-link">Выйти из аккаунта</button>
+            </form>
         </div>
 
         <!-- Заголовок страницы -->

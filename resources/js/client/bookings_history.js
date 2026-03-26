@@ -1,52 +1,53 @@
-// Модальное окно для отмены бронирования
-const modalOverlay = document.getElementById('cancelModal');
-const cancelBookingIdInput = document.getElementById('cancelBookingId');
-const cancelRoomNameSpan = document.getElementById('cancelRoomName');
-const closeModalBtn = document.getElementById('closeModalBtn');
-const cancelForm = document.getElementById('cancelForm');
+const confirmModal     = document.getElementById('confirmModal');
+const confirmModalOk   = document.getElementById('confirmModalOk');
+const confirmModalCancel = document.getElementById('confirmModalCancel');
+const confirmModalText  = document.getElementById('confirmModalText');
 
-// Все кнопки отмены
-const cancelButtons = document.querySelectorAll('.action-btn.cancel:not([disabled])');
+function confirm(question){
+    return new Promise((resolve) => {
+        confirmModalText.textContent = question;
+        confirmModal.showModal();
 
-function openModal(bookingId, roomName) {
-    cancelBookingIdInput.value = bookingId;
-    cancelRoomNameSpan.textContent = roomName;
-    modalOverlay.classList.add('active');
-}
+        const onConfirm = () => {
+            confirmModal.close();
+            confirmModalOk.removeEventListener('click', onConfirm);
+            confirmModalCancel.removeEventListener('click', onCancel);
+            resolve(true);
+        };
 
-function closeModal() {
-    modalOverlay.classList.remove('active');
-}
+        const onCancel = () => {
+            confirmModal.close();
+            confirmModalOk.removeEventListener('click', onConfirm);
+            confirmModalCancel.removeEventListener('click', onCancel);
+            resolve(false);
+        };
 
-cancelButtons.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const bookingCard = this.closest('.booking-card');
-        const bookingId = this.getAttribute('data-booking-id') || bookingCard.getAttribute('data-booking-id');
-        const roomNameElement = bookingCard.querySelector('.room-name');
-        const roomName = roomNameElement ? roomNameElement.textContent : 'номер';
-        openModal(bookingId, roomName);
+        confirmModalOk.addEventListener('click', onConfirm);
+        confirmModalCancel.addEventListener('click', onCancel);
     });
-});
+}
 
-closeModalBtn.addEventListener('click', closeModal);
+document.querySelectorAll('.cancel-form').forEach((form) => {
+    form.addEventListener('submit', async (e) =>{
+        e.preventDefault();
 
-// Закрытие при клике на оверлей
-modalOverlay.addEventListener('click', function(e) {
-    if (e.target === modalOverlay) {
-        closeModal();
-    }
-});
+        const button = form.querySelector('.action-btn.cancel');
+        const bookingId = button.dataset.bookingId;
+        const parent = form.closest('.booking-info');
+        const status = parent.querySelector('.booking-status');
 
-// Обработка формы отмены
-cancelForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const bookingId = cancelBookingIdInput.value;
-    
-    // Имитация отправки на сервер
-    alert(`Бронирование #${bookingId} успешно отменено.\n\nСервер получил запрос на отмену.`);
-    closeModal();
-    
-    // В реальном проекте здесь был бы fetch или отправка формы
-    // this.submit(); - раскомментировать для реальной отправки
+        const information = 'Вы действительно хотите отменить бронирование? Это действие нельзя будет отменить.';
+        if(await confirm(information)){
+            button.setAttribute("disabled", "");
+            button.setAttribute("style", "opacity: 0.4; cursor: not-allowed;");
+            status.className = 'booking-status cancelled';
+            status.textContent = 'Отменено';
+            await fetch(`/hotelsystem/booking/cancel/api/v1/${bookingId}`, {
+                method : "POST",
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+        }else{
+            return;
+        }
+    });
 });

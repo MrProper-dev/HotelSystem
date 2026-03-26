@@ -13,12 +13,16 @@ public class PreparedStatementCreator{
     private StringBuilder root;
     private StringBuilder values;
     private StringBuilder where;
+    private StringBuilder group;
+    private StringBuilder order;
     private StringBuilder end;
 
     public PreparedStatementCreator(String select){
         root = new StringBuilder(select);
         values = new StringBuilder();
         where = new StringBuilder();
+        group = new StringBuilder();
+        order = new StringBuilder();
         end = new StringBuilder();
         params = new ArrayList<>();
     }
@@ -32,6 +36,16 @@ public class PreparedStatementCreator{
         values.append(" ");
         values.append(value);
         values.append(",");
+    }
+
+    public void addGroupBy(String field){
+        group.append(field);
+        group.append(", ");
+    }
+
+    public void addOrderBy( String field){
+        order.append(field);
+        order.append(" AND");
     }
 
     public void addReturning(String value){
@@ -56,13 +70,27 @@ public class PreparedStatementCreator{
             where.delete(0, 5);
             where.insert(0, " WHERE ");
         }
+        if(!order.isEmpty()){
+            order.insert(0, " ORDER BY ");
+            order.delete(order.length()-3, order.length());
+            order.append(" ");
+        }
+        if(!group.isEmpty()){
+            group.insert(0, " GROUP BY ");
+            group.delete(group.length()-2, group.length());
+            group.append(" ");
+        }
 
         if(!values.isEmpty()){
             values.delete(values.length()-1, values.length());
         }
 
+
         root.append(values.toString());
-        where.append(end.toString());
+
+        order.append(end.toString());
+        group.append(order.toString());
+        where.append(group.toString());
         root.append(where.toString());
         
         System.out.println(root.toString());

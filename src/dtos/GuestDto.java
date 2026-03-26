@@ -13,6 +13,12 @@ public class GuestDto {
     public GuestDto() {
     }
 
+    public GuestDto(String fullName, LocalDate birthDate, String seriesAndNumber) {
+        this.fullName = fullName;
+        this.birthDate = birthDate;
+        this.seriesAndNumber = seriesAndNumber;
+    }
+
     public GuestDto(Integer id, BookingDto booking, String fullName, LocalDate birthDate, String seriesAndNumber) {
         this.id = id;
         this.booking = booking;

@@ -21,8 +21,8 @@
                 </a>
                 <div class="nav-links">
                     <a href="/hotelsystem/rooms" class="nav-link">Комнаты</a>
-                    <a href="#" class="nav-link">Мои брони</a>
-                    <a href="#" class="nav-link">Профиль</a>
+                    <a href="/hotelsystem/booking/history" class="nav-link">Мои брони</a>
+                    <a href="/hotelsystem/profile" class="nav-link">Профиль</a>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
             <!-- КНОПКА БРОНИРОВАНИЯ -->
             <div class="booking-action">
-                <a href="/hotelsystem/booking/${room.id}" class="book-button">Забронировать номер</a>
+                <a href="/hotelsystem/book/${room.id}" class="book-button">Забронировать номер</a>
             </div>
         </div>
 

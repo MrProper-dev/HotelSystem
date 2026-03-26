@@ -21,8 +21,8 @@
                 </a>
                 <div class="nav-links">
                     <a href="#" class="nav-link active">Комнаты</a>
-                    <a href="#" class="nav-link">Мои брони</a>
-                    <a href="#" class="nav-link">Профиль</a>
+                    <a href="/hotelsystem/booking/history" class="nav-link">Мои брони</a>
+                    <a href="/hotelsystem/profile" class="nav-link">Профиль</a>
                 </div>
             </div>
         </div>

@@ -20,6 +20,77 @@ public class ClientDao {
         return instance;
     }
 
+    public void updateClientWithoutPassword(ClientDto client) {
+        if (client == null || client.getId() == null) {
+            throw new RuntimeException("Client and client id cannot be null");
+        }
+        final String sql = "UPDATE clients SET email = ?, phone = ?, name = ?";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(client.getEmail());
+        creator.addParam(client.getPhone());
+        creator.addParam(client.getName());
+        creator.addParam(client.getId());
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            int updatedRows = statement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new RuntimeException("Client with id " + client.getId() + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Updating client without password failed", e);
+        }
+    }
+
+    public void updateClient(ClientDto client) {
+        if (client == null || client.getId() == null) {
+            throw new RuntimeException("Client and client id cannot be null");
+        }
+        final String sql = "UPDATE clients SET email = ?, password = ?, phone = ?, name = ?";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(client.getEmail());
+        creator.addParam(client.getPassword());
+        creator.addParam(client.getPhone());
+        creator.addParam(client.getName());
+        creator.addParam(client.getId());
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            int updatedRows = statement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new RuntimeException("Client with id " + client.getId() + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Updating client failed", e);
+        }
+    }
+
+    public ClientDto getClientById(Integer clientId) {
+        final String sql = "SELECT email, phone, name FROM clients";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        if (clientId == null) {
+            throw new RuntimeException("Client id cannot be null");
+        }
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(clientId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                ClientDto client = new ClientDto(
+                    clientId,
+                    result.getString("email"), 
+                    result.getString("phone"), 
+                    result.getString("name"));
+                return client;
+            } else {
+                throw new RuntimeException("Client with id " + clientId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting client by id failed", e);
+        }
+    }
+
     public ClientDto getByEmail(String email){
         final String root = "SELECT id, password FROM clients";
         PreparedStatementCreator creator = new PreparedStatementCreator(root);

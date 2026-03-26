@@ -10,15 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebFilter(urlPatterns = {"/checkbooking/api/v1/*", "/booking/*", "/profile/*"})
-public class ClientAuthFilter extends HttpFilter{
+@WebFilter(urlPatterns = {""})
+public class AdminAuthFilter extends HttpFilter{
 
     @Override
-    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
         HttpSession session = req.getSession();
-        Object clientIdObj = session.getAttribute("clientId");
-        if(clientIdObj == null){
-            res.sendRedirect("/hotelsystem/login");
+        Object adminId = session.getAttribute("adminId");
+        if(adminId == null){
+            res.sendRedirect("/hotelsystem/admin/login");
             return;
         }else{
             chain.doFilter(req, res);

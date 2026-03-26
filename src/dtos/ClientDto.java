@@ -13,6 +13,9 @@ public class ClientDto {
     private LocalDateTime createdAt;
     private LocalDateTime lastActivity;
     
+    public ClientDto() {
+    }
+
     public ClientDto(Integer id) {
         this.id = id;
     }
@@ -21,6 +24,21 @@ public class ClientDto {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public ClientDto(Integer id, String email, String phone, String name) {
+        this.id = id;
+        this.email = email;
+        this.phone = phone;
+        this.name = name;
+    }
+
+    public ClientDto(Integer id, String email, String password, String phone, String name) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.name = name;
     }
 
     public ClientDto(String email, String password, String phone, String name) {

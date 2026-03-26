@@ -1,6 +1,7 @@
 package dtos;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class BookingDto {
 
@@ -11,6 +12,7 @@ public class BookingDto {
     private LocalDate checkOutDate;
     private Float totalPrice;
     private BookingStatus status;
+    private List<GuestDto> guests;
 
     public BookingDto(Integer id, ClientDto client, RoomDto room, LocalDate checkInDate, LocalDate checkOutDate,
             Float totalPrice, BookingStatus status) {
@@ -65,6 +67,11 @@ public class BookingDto {
     public void setStatus(BookingStatus status) {
         this.status = status;
     }
-    
+    public List<GuestDto> getGuests() {
+        return guests;
+    }
+    public void setGuests(List<GuestDto> guests) {
+        this.guests = guests;
+    }
 
 }

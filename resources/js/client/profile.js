@@ -1,43 +1,88 @@
-// Кнопка "Отмена" - сброс формы к исходным значениям
-        const cancelBtn = document.getElementById('cancelBtn');
-        const profileForm = document.getElementById('profileForm');
-        
-        cancelBtn.addEventListener('click', function() {
-            if (confirm('Отменить все изменения? Несохраненные данные будут потеряны.')) {
-                profileForm.reset();
-                // Восстанавливаем исходные значения
-                document.querySelector('input[name="email"]').value = 'ivan.ivanov@example.com';
-                document.querySelector('input[name="password"]').value = 'password123';
-                document.querySelector('input[name="name"]').value = 'Иван';
-                document.querySelector('input[name="phone"]').value = '+7 (900) 123-45-67';
-                document.querySelector('input[name="surname"]').value = 'Иванов';
-                document.querySelector('input[name="firstname"]').value = 'Иван';
-                document.querySelector('input[name="patronymic"]').value = 'Иванович';
-                document.querySelector('input[name="birthdate"]').value = '1990-01-01';
-                document.querySelector('input[name="doc_series"]').value = '1234';
-                document.querySelector('input[name="doc_number"]').value = '567890';
-                document.querySelector('input[name="department_code"]').value = '770-001';
-                document.querySelector('input[name="issue_date"]').value = '2010-03-15';
-                alert('Изменения отменены');
-            }
-        });
+const cancelBtn = document.getElementById('cancelBtn');
+const profileForm = document.getElementById('profileForm');
+const logoutBtn = document.getElementById('logoutBtn');
 
-        // Обработка отправки формы
-        profileForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(profileForm);
-            let dataString = '';
-            for (let [key, value] of formData.entries()) {
-                if (key === 'password' && value === 'password123') {
-                    dataString += `${key}: [не изменен]\n`;
-                } else {
-                    dataString += `${key}: ${value || '[пусто]'}\n`;
-                }
-            }
-            
-            alert(`✅ Данные успешно обновлены!\n\nСервер получил:\n${dataString}\n\nИзменения сохранены.`);
-            
-            // В реальном проекте здесь был бы fetch или отправка формы
-            // this.submit(); - раскомментировать для реальной отправки
-        });
+const infoModal    = document.getElementById("infoModal");
+const infoModalOk  = document.getElementById("infoModalOk");
+const infoModalText = document.getElementById("infoModalText");
+
+const confirmModal     = document.getElementById("confirmModal");
+const confirmModalOk   = document.getElementById("confirmModalOk");
+const confirmModalCancel = document.getElementById("confirmModalCancel");
+const confirmModalText  = document.getElementById("confirmModalText");
+
+function info(infotmation){
+    return new Promise((resolve) =>{
+        infoModalText.textContent = infotmation;
+        infoModal.showModal();
+
+        const onOK = () =>{
+            infoModal.close();
+            infoModalOk.removeEventListener("click", onOK);
+            resolve();
+        };
+
+        infoModalOk.addEventListener("click", onOK);
+    });
+}
+
+cancelBtn.addEventListener('click', function() {
+    profileForm.reset();
+});
+
+function confirm(question){
+    return new Promise((resolve) => {
+        confirmModalText.textContent = question;
+        confirmModal.showModal();
+
+        const onConfirm = () => {
+            confirmModal.close();
+            confirmModalOk.removeEventListener("click", onConfirm);
+            confirmModalCancel.removeEventListener("click", onCancel);
+            resolve(true);
+        };
+
+        const onCancel = () => {
+            confirmModal.close();
+            confirmModalOk.removeEventListener("click", onConfirm);
+            confirmModalCancel.removeEventListener("click", onCancel);
+            resolve(false);
+        };
+
+        confirmModalOk.addEventListener("click", onConfirm);
+        confirmModalCancel.addEventListener("click", onCancel);
+    });
+}
+
+logoutBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const information = 'Вы действительно хотите выйти?';
+    if(await confirm(information)){
+        window.location.href = '/hotelsystem/logout';
+    }
+});
+
+profileForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.querySelector('input[name="email"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+    const name = document.querySelector('input[name="name"]').value;
+    const phone = document.querySelector('input[name="phone"]').value;
+
+    const information = 'Данные изменены.';
+    await info(information);
+    
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('name', name);
+    formData.append('phone', phone);
+
+    await fetch(`/hotelsystem/client/update/api/v1`, {
+        method : "POST",
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
+    });
+});

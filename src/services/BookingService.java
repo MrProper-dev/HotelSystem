@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import daos.BookingDao;
+import daos.GuestDao;
 import daos.RoomDao;
 import dtos.BookingDto;
 import dtos.BookingStatus;
@@ -15,6 +16,8 @@ import dtos.RoomDto;
 
 public class BookingService {
 
+    private final Integer PAGE_SIZE = 10;
+
     private static final BookingService instance = new BookingService();
     private BookingService(){}
     public static BookingService getBookingService(){
@@ -23,6 +26,37 @@ public class BookingService {
 
     private BookingDao bookingDao = BookingDao.getBookingDao();
     private RoomDao roomDao = RoomDao.getRoomDao();
+    private GuestDao guestDao = GuestDao.getGuestDao();
+
+    public BookingDto getBookingById(Integer bookingId) {
+        if (bookingId == null) {
+            throw new RuntimeException("Booking id cannot be null");
+        }
+        BookingDto booking = bookingDao.getBookingById(bookingId);
+        List<GuestDto> guests = guestDao.getGuestsByBookingId(bookingId);
+        booking.setGuests(guests);
+        return booking;
+    }
+
+    public void cancelBooking(Integer bookingId) {
+        if (bookingId == null) {
+            throw new RuntimeException("Booking id cannot be null");
+        }
+        bookingDao.cancelBooking(bookingId);
+    }
+
+    public Integer getTotalPagesByClientId(Integer clientId){
+        Integer bookingCount = bookingDao.getBookingsCount(clientId);
+        Integer pageCount = bookingCount / PAGE_SIZE;
+        if(bookingCount % PAGE_SIZE != 0){
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public List<BookingDto> getBookingsPageByClientId(Integer clientId, Integer pageNumber){
+        return bookingDao.getBookingsPageByClientId(clientId, pageNumber, PAGE_SIZE);
+    }
 
     public Boolean checkRoomAvailability(Integer roomId, String checkIn, String checkOut){
         LocalDate checkInDate = LocalDate.parse(checkIn);
@@ -45,7 +79,7 @@ public class BookingService {
             checkIn, 
             checkOut, 
             totalPrice,
-            BookingStatus.CREATED);
+            BookingStatus.ACTIVE);
         
         List<GuestDto> guests = new ArrayList<>();
         for (Map<String,String> params : guestsParams) {

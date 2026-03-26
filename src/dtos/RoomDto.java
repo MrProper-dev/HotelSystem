@@ -15,6 +15,23 @@ public class RoomDto {
         this.id = id;
     }
 
+    public RoomDto(BuildingDto building, Integer number, Integer floor, String picture) {
+        this.building = building;
+        this.number = number;
+        this.floor = floor;
+        this.picture = picture;
+    }
+
+    public RoomDto(BuildingDto building, Integer number, Integer floor, Integer sleepingPlaces, Float price,
+            String picture) {
+        this.building = building;
+        this.number = number;
+        this.floor = floor;
+        this.sleepingPlaces = sleepingPlaces;
+        this.price = price;
+        this.picture = picture;
+    }
+
     public RoomDto(Integer id, BuildingDto building, Integer number, Integer floor, Integer sleepingPlaces, Float price,
             String picture, String description) {
         this.id = id;

@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import services.BookingService;
 import services.RoomService;
 
-@WebServlet("/booking/*")
+@WebServlet("/book/*")
 public class BookingServlet extends HttpServlet {
 
     private RoomService roomService;
@@ -98,8 +98,7 @@ public class BookingServlet extends HttpServlet {
 
         bookingService.crateBooking(guests, roomId, clientId, checkin, checkout);
 
-        // //TODO: доделать куда отправить
-        resp.sendRedirect("/");
+        resp.sendRedirect("/hotelsystem/booking/history");
     }
 
     

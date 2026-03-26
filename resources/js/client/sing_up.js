@@ -1,3 +1,7 @@
+const infoModal    = document.getElementById("infoModal");
+const infoModalOk  = document.getElementById("infoModalOk");
+const infoModalText = document.getElementById("infoModalText");
+
 function info(infotmation){
     return new Promise((resolve) =>{
         infoModalText.textContent = infotmation;

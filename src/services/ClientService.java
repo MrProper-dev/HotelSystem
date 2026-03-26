@@ -21,6 +21,23 @@ public class ClientService {
         return clientDao.createClient(client).getId();
     }
 
+    public void updateClient(Integer id, String email, String password, String phone, String name){
+        if(email != null && !email.isEmpty() && phone != null && !phone.isEmpty() && name != null && !name.isEmpty()){
+            ClientDto client = new ClientDto(id, email, password, phone, name);
+            if(password != null && !password.isEmpty()){
+                clientDao.updateClient(client);
+            }else{
+                clientDao.updateClientWithoutPassword(client);
+            }
+        }else{
+            throw new RuntimeException("Email, phone, name can`t be null");
+        }
+    }
+
+    public ClientDto getClientById(Integer clientId){
+        return clientDao.getClientById(clientId);
+    }
+
     public Boolean exist(String email){
         if(email == null || email.isEmpty()){
             throw new RuntimeException("Email can`t be null");

@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import services.BuildingService;
 import services.RoomService;
 
-//TODO: логирование, не видно что происходит
 @WebServlet("/rooms")
 public class RoomListServlet extends HttpServlet{
 

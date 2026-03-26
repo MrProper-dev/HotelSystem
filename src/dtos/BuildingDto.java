@@ -10,6 +10,10 @@ public class BuildingDto {
         this.id = id;
     }
 
+    public BuildingDto(String name) {
+        this.name = name;
+    }
+
     public BuildingDto(Integer id, String name, String address, Integer floors) {
         this.id = id;
         this.name = name;
