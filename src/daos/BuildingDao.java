@@ -1,6 +1,7 @@
 package daos;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import daos.utils.ConnectionProvider;
 import daos.utils.ConnectionProviderFactory;
+import daos.utils.PreparedStatementCreator;
 import dtos.BuildingDto;
 
 public class BuildingDao {
@@ -21,7 +23,27 @@ public class BuildingDao {
         return instance;
     }
 
-    
+    public List<BuildingDto> getAllBuildingsWithoutAddress() {
+        final String sql = "SELECT id, name, floors FROM buildings";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        List<BuildingDto> buildings = new ArrayList<>();
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                BuildingDto building = new BuildingDto(
+                    result.getInt("id"),
+                    result.getString("name"),
+                    null,  // address - не заполняем
+                    result.getInt("floors")
+                );
+                buildings.add(building);
+            }
+            return buildings;
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting all buildings failed", e);
+        }
+    }
 
     public Integer getMaxFloor(){
         final String query = """

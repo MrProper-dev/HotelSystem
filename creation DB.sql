@@ -18,7 +18,7 @@ CREATE TABLE superusers (
 	id SERIAL PRIMARY KEY,
     login VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    last_activity TIMESTAMP NOT NULL
+    last_log_in TIMESTAMP NOT NULL
 );
 CREATE TABLE administrators (
     id SERIAL PRIMARY KEY,
@@ -27,7 +27,7 @@ CREATE TABLE administrators (
 	full_name VARCHAR(255) NOT NULL,
 	phone VARCHAR(50) NOT NULL,
 	creation_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_activity TIMESTAMP NOT NULL
+    last_log_in TIMESTAMP NOT NULL
 );
 CREATE TABLE clients (
     id SERIAL PRIMARY KEY,

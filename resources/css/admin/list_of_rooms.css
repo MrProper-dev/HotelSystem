@@ -27,6 +27,82 @@ body {
     padding: 28px 32px;
 }
 
+/* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ АДМИНИСТРАТОРА ===== */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E2E4DF;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo-block {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.logo-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #6C9A8B;
+    padding: 8px 20px 8px 16px;
+    border-radius: 60px;
+    box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+.logo-placeholder:hover {
+    transform: scale(1.02);
+}
+.logo-icon {
+    font-size: 28px;
+}
+.logo-text {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: white;
+}
+.logo-accent {
+    font-weight: 400;
+    font-size: 13px;
+    opacity: 0.85;
+    margin-left: 4px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-link {
+    background: transparent;
+    border: none;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4E46;
+    border-radius: 40px;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+.nav-link:hover {
+    background: #F0F3EE;
+    color: #2C5A4A;
+}
+.nav-link.active {
+    background: #6C9A8B;
+    color: white;
+    box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+}
+
 /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
 .page-header {
     display: flex;
@@ -249,6 +325,10 @@ body {
     background: #F9EFE8;
     color: #B67B5E;
 }
+.status-badge.none {
+    background: #E8E9F0;
+    color: #6C6F8A;
+}
 
 .action-link {
     background: transparent;
@@ -314,6 +394,16 @@ body {
     text-align: center;
 }
 
+.logout-link {
+    background: #E8D9C5;
+    color: #2C4D3C;
+    border: 1px solid #D0C3B0;
+}
+.logout-link:hover {
+    background: #D0C3B0;
+    color: #203326;
+}
+
 @media (max-width: 1024px) {
     .room-row {
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -324,26 +414,6 @@ body {
         font-size: 12px;
         padding: 6px 8px;
     }
-}
-
-.logout-link {
-    background: #E8D9C5;
-    color: #2C4D3C;
-    border: 1px solid #D0C3B0;
-}
-.logout-link:hover {
-    background: #D0C3B0;
-    color: #203326;
-}
-.top-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #E2E4DF;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-    gap: 20px;
 }
 
 @media (max-width: 768px) {

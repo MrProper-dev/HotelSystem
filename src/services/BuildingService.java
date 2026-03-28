@@ -23,4 +23,8 @@ public class BuildingService {
         return buildingDao.getAllWithoutAddressAndFloors();
     }
 
+    public List<BuildingDto> getBuildingsWithoutAddress(){
+        return buildingDao.getAllBuildingsWithoutAddress();
+    }
+
 }

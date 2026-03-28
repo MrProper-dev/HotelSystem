@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import daos.utils.ConnectionProvider;
 import daos.utils.ConnectionProviderFactory;
@@ -18,6 +20,26 @@ public class ClientDao {
     private ClientDao(){}
     public static ClientDao getClientDao(){
         return instance;
+    }
+
+    public void updateClientLastLogin(Integer clientId) {
+        final String sql = "UPDATE clients SET last_log_in = ?";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        if (clientId == null) {
+            throw new RuntimeException("Client id cannot be null");
+        }
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(Timestamp.valueOf(LocalDateTime.now()));
+        creator.addParam(clientId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            int updatedRows = statement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new RuntimeException("Client with id " + clientId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Updating client last login failed", e);
+        }
     }
 
     public void updateClientWithoutPassword(ClientDto client) {

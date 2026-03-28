@@ -28,6 +28,10 @@ public class BookingService {
     private RoomDao roomDao = RoomDao.getRoomDao();
     private GuestDao guestDao = GuestDao.getGuestDao();
 
+    public List<BookingDto> getBookingsByRoomId(Integer roomId){
+        return bookingDao.getBookingsByRoomId(roomId);
+    }
+
     public BookingDto getBookingById(Integer bookingId) {
         if (bookingId == null) {
             throw new RuntimeException("Booking id cannot be null");

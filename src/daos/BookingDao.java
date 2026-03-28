@@ -29,6 +29,44 @@ public class BookingDao {
         return instance;
     }
 
+    public List<BookingDto> getBookingsByRoomId(Integer roomId) {
+        if (roomId == null) {
+            throw new RuntimeException("Room id cannot be null");
+        }
+        final String root = """
+                SELECT b.id, b.check_in_date, b.check_out_date, b.status,
+                    c.id as client_id, c.name as client_name
+                FROM bookings b
+                JOIN clients c ON b.client_id = c.id
+                """;
+        PreparedStatementCreator creator = new PreparedStatementCreator(root);
+        creator.addWhereAndCondition("b.room_id = ?");
+        creator.addParam(roomId);
+        creator.addOrderBy("b.check_in_date DESC");
+        List<BookingDto> bookings = new ArrayList<>();
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                ClientDto client = new ClientDto(result.getInt("client_id"));
+                client.setName(result.getString("client_name"));
+                BookingDto booking = new BookingDto(
+                    result.getInt("id"),
+                    client,
+                    null,
+                    result.getDate("check_in_date").toLocalDate(),
+                    result.getDate("check_out_date").toLocalDate(),
+                    null,
+                    mapToStatus(result.getString("status"))
+                );
+                bookings.add(booking);
+            }
+            return bookings;
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting bookings by room id failed", e);
+        }
+    }
+
     public BookingDto getBookingById(Integer bookingId) {
         final String root = """
                 SELECT b.id, b.status, b.check_in_date, b.check_out_date, b.total_price, r.number, r.floor, r.picture, r.price, r.sleeping_places, bu.name as building_name, g.full_name, g.birth_date, g.series_and_number
@@ -131,7 +169,7 @@ public class BookingDao {
         creator.addWhereAndCondition("b.client_id = ?");
         creator.addParam(clientId);
         creator.addGroupBy("b.id, b.status, b.check_in_date, b.check_out_date, b.total_price, r.number, r.floor, r.picture, bu.name");
-        creator.addOrderBy("b.id ASC");
+        creator.addOrderBy("b.id DESC");
         creator.addLimit();
         creator.addParam(pageSize);
         creator.addOffset();

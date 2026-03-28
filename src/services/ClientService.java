@@ -13,6 +13,13 @@ public class ClientService {
 
     private ClientDao clientDao = ClientDao.getClientDao();
 
+    public void updateClientLogIn(Integer clientId){
+        if(clientId == null){
+            throw new RuntimeException("Client id cannot be null");
+        }
+        clientDao.updateClientLastLogin(clientId);
+    }
+
     public Integer createClient(String name, String phone, String email, String password){
         if (name == null || name.isEmpty() || phone == null || phone.isEmpty() || email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new RuntimeException("One of the parameters is null");

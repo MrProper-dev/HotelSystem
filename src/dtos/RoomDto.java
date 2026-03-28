@@ -10,6 +10,7 @@ public class RoomDto {
     private Float price;
     private String picture;
     private String description;
+    private RoomStatus status;
 
     public RoomDto(Integer id) {
         this.id = id;
@@ -20,6 +21,15 @@ public class RoomDto {
         this.number = number;
         this.floor = floor;
         this.picture = picture;
+    }
+
+    public RoomDto(Integer id, BuildingDto building, Integer number, Integer floor, Integer sleepingPlaces, Float price) {
+        this.id = id;
+        this.building = building;
+        this.number = number;
+        this.floor = floor;
+        this.sleepingPlaces = sleepingPlaces;
+        this.price = price;
     }
 
     public RoomDto(BuildingDto building, Integer number, Integer floor, Integer sleepingPlaces, Float price,
@@ -91,5 +101,11 @@ public class RoomDto {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+    public RoomStatus getStatus() {
+        return status;
+    }
+    public void setStatus(RoomStatus status) {
+        this.status = status;
     }
 }

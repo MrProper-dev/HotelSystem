@@ -15,6 +15,7 @@ import daos.utils.ConnectionProviderFactory;
 import daos.utils.PreparedStatementCreator;
 import dtos.BuildingDto;
 import dtos.RoomDto;
+import dtos.RoomStatus;
 
 public class RoomDao {
 
@@ -24,6 +25,56 @@ public class RoomDao {
     private RoomDao(){}
     public static RoomDao getRoomDao(){
         return instance;
+    }
+
+    public RoomDto getRoomByIdWithStatus(Integer roomId) {
+        if (roomId == null) {
+            throw new RuntimeException("Room id cannot be null");
+        }
+        final String sql = """
+                SELECT r.id, r.number, r.floor, r.sleeping_places, r.price, r.picture, r.description,
+                    b.id as building_id, b.name as building_name, b.floors as building_floors,
+                    CASE WHEN EXISTS (
+                        SELECT 1 FROM bookings b2 
+                        WHERE b2.room_id = r.id 
+                        AND b2.status = 'ACTIVE'
+                        AND CURRENT_DATE BETWEEN b2.check_in_date AND b2.check_out_date
+                    ) THEN 'BUSY' ELSE 'FREE' END as current_status
+                FROM rooms r 
+                JOIN buildings b ON r.building_id = b.id
+                """;
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("r.id = ?");
+        creator.addParam(roomId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                BuildingDto building = new BuildingDto(
+                    result.getInt("building_id"),
+                    result.getString("building_name"),
+                    null,
+                    result.getInt("building_floors")
+                );
+                RoomDto room = new RoomDto(
+                    result.getInt("id"),
+                    building,
+                    result.getInt("number"),
+                    result.getInt("floor"),
+                    result.getInt("sleeping_places"),
+                    result.getFloat("price"),
+                    result.getString("picture"),
+                    result.getString("description")
+                );
+                String status = result.getString("current_status");
+                room.setStatus(RoomStatus.valueOf(status));
+                return room;
+            } else {
+                throw new RuntimeException("Room with id " + roomId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting room by id with status failed", e);
+        }
     }
 
     public Float getPriceById(Integer id){
@@ -161,7 +212,7 @@ public class RoomDao {
         }else{
             throw new RuntimeException("Page size can`t be null and less 1");
         }
-        if(pageNumber != null && pageNumber >=0){
+        if(pageNumber != null && pageNumber >= 0){
             creator.addOffset();
             creator.addParam(pageNumber * pageSize);
         }else{
@@ -199,4 +250,165 @@ public class RoomDao {
             result.getString("description"));
     }
 
+    public List<RoomDto> getPageForAdmin(Integer pageNumber, Integer pageSize, 
+            LocalDate checkin, LocalDate checkout, Integer guests, Integer floor,
+            Integer buildingId, Float minPrice, Float maxPrice, RoomStatus statusFilter) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("""
+                SELECT r.id, r.number, r.floor, r.sleeping_places, r.price, b.id as building_id, b.name as building_name
+                FROM rooms r 
+                JOIN buildings b ON r.building_id = b.id
+                """);
+        List<Object> params = new ArrayList<>();
+        boolean needBookingJoin = checkin != null && checkout != null;
+        if (needBookingJoin) {
+            sqlBuilder.append("LEFT JOIN bookings b2 ON r.id = b2.room_id AND b2.status = 'ACTIVE'");
+            if (checkin != null && checkout != null) {
+                sqlBuilder.append(" AND b2.check_out_date > ? AND b2.check_in_date < ?");
+                params.add(Date.valueOf(checkin));
+                params.add(Date.valueOf(checkout));
+            }
+        }
+        sqlBuilder.append(" WHERE 1=1");
+        if (needBookingJoin && statusFilter != null) {
+            if (statusFilter == RoomStatus.FREE) {
+                sqlBuilder.append(" AND b2.id IS NULL");
+            } else if (statusFilter == RoomStatus.BUSY) {
+                sqlBuilder.append(" AND b2.id IS NOT NULL");
+            }
+        }
+        if (guests != null) {
+            sqlBuilder.append(" AND r.sleeping_places = ?");
+            params.add(guests);
+        }
+        if (floor != null) {
+            sqlBuilder.append(" AND r.floor = ?");
+            params.add(floor);
+        }
+        if (buildingId != null) {
+            sqlBuilder.append(" AND r.building_id = ?");
+            params.add(buildingId);
+        }
+        if (minPrice != null) {
+            sqlBuilder.append(" AND r.price >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sqlBuilder.append(" AND r.price <= ?");
+            params.add(maxPrice);
+        }
+        sqlBuilder.append(" GROUP BY r.id, b.id, b.name");
+        if (pageSize != null && pageSize >= 1) {
+            sqlBuilder.append(" LIMIT ?");
+            params.add(pageSize);
+        } else {
+            throw new RuntimeException("Page size can't be null and less than 1");
+        }
+        if (pageNumber != null && pageNumber >= 0) {
+            sqlBuilder.append(" OFFSET ?");
+            params.add(pageNumber * pageSize);
+        } else {
+            throw new RuntimeException("Page number can't be null and less than 0");
+        }
+        PreparedStatementCreator creator = new PreparedStatementCreator(sqlBuilder.toString());
+        for (Object param : params) {
+            creator.addParam(param);
+        }
+        try (Connection connection = connectionProvider.getConnection()) {
+            List<RoomDto> rooms = new ArrayList<>();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                RoomDto room = mapForAdmin(result);
+                rooms.add(room);
+            }
+            return rooms;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Getting rooms for admin failed", e);
+        }
+    }
+
+    public Integer getCountForAdmin(LocalDate checkin, LocalDate checkout, Integer guests, Integer floor,
+            Integer buildingId, Float minPrice, Float maxPrice, RoomStatus statusFilter) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("""
+                SELECT COUNT(*)
+                FROM rooms r 
+                JOIN buildings b ON r.building_id = b.id
+                """);
+        List<Object> params = new ArrayList<>();
+        boolean needBookingJoin = checkin != null && checkout != null;
+        if (needBookingJoin) {
+            sqlBuilder.append("LEFT JOIN bookings b2 ON r.id = b2.room_id AND b2.status = 'ACTIVE'");
+            if (checkin != null && checkout != null) {
+                sqlBuilder.append(" AND b2.check_out_date > ? AND b2.check_in_date < ?");
+                params.add(Date.valueOf(checkin));
+                params.add(Date.valueOf(checkout));
+            }
+        }
+        sqlBuilder.append(" WHERE 1=1");
+        if (needBookingJoin && statusFilter != null) {
+            if (statusFilter == RoomStatus.FREE) {
+                sqlBuilder.append(" AND b2.id IS NULL");
+            } else if (statusFilter == RoomStatus.BUSY) {
+                sqlBuilder.append(" AND b2.id IS NOT NULL");
+            }
+        }
+        if (guests != null) {
+            sqlBuilder.append(" AND r.sleeping_places = ?");
+            params.add(guests);
+        }
+        if (floor != null) {
+            sqlBuilder.append(" AND r.floor = ?");
+            params.add(floor);
+        }
+        if (buildingId != null) {
+            sqlBuilder.append(" AND r.building_id = ?");
+            params.add(buildingId);
+        }
+        if (minPrice != null) {
+            sqlBuilder.append(" AND r.price >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sqlBuilder.append(" AND r.price <= ?");
+            params.add(maxPrice);
+        }
+        sqlBuilder.append(" GROUP BY r.id, b.id, b.name");
+        PreparedStatementCreator creator = new PreparedStatementCreator(sqlBuilder.toString());
+        for (Object param : params) {
+            creator.addParam(param);
+        }
+        try (Connection connection = connectionProvider.getConnection()) {
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery();
+            Integer count = 0;
+            while(result.next()){
+                count++;
+            }
+            return count;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Getting rooms count for admin failed", e);
+        }
+    }
+
+    private RoomDto mapForAdmin(ResultSet result) throws SQLException {
+        BuildingDto building = new BuildingDto(
+            result.getInt("building_id"),
+            result.getString("building_name"));
+        RoomDto room = new RoomDto(
+            result.getInt("id"),
+            building,
+            result.getInt("number"),
+            result.getInt("floor"),
+            result.getInt("sleeping_places"),
+            result.getFloat("price")
+        );
+        try{
+            room.setStatus(RoomStatus.valueOf(result.getString("room_status")));
+        }catch (SQLException e){}
+        return room;
+    }
 }

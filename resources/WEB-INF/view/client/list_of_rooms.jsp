@@ -128,18 +128,28 @@
 
         </div>
 
-        <!-- ПАГИНАЦИЯ (страницы 1–4) -->
+        <!-- ПАГИНАЦИЯ -->
         <div class="pagination">
             <%
             Integer currentPage = (Integer)request.getAttribute("currentPage");
-            String params = request.getQueryString();
+            String query = request.getQueryString();
+            String params = query;
+            if (query != null) {
+                int pagePos = query.indexOf("page=");
+                if (pagePos != -1) {
+                    if(pagePos != 0){
+                        pagePos--;
+                    } 
+                    params = query.substring(0, pagePos);
+                }
+            }
             %>
-            <%for(int i = 1; i<currentPage; i++){%>
-            <a href="<%=(params==null || params.isEmpty()) ? "?" : "?"+params+"&"%>page=<%=i%>" class="page-link"><%=i%></a>
+            <%for(int i = 0; i<currentPage; i++){%>
+            <a href="<%=(params!=null && !params.isEmpty()) ? "?"+params+"&" : "?"%>page=<%=i%>" class="page-link"><%=i+1%></a>
             <%}%>
-            <a href="<%=(params==null || params.isEmpty()) ? "?" : "?"+params+"&"%>page=1" class="page-link active-page">${currentPage}</a>
-            <%for(int i = currentPage+1; i<=(Integer)request.getAttribute("pageCount"); i++){%>
-            <a href="<%=(params==null || params.isEmpty()) ? "?" : "?"+params+"&"%>page=<%=i%>" class="page-link"><%=i%></a>
+            <a href="<%=(params!=null && !params.isEmpty()) ? "?"+params+"&" : "?"%>page=${currentPage}" class="page-link active-page">${currentPage+1}</a>
+            <%for(int i = currentPage+1; i<(Integer)request.getAttribute("pageCount"); i++){%>
+            <a href="<%=(params!=null && !params.isEmpty()) ? "?"+params+"&" : "?"%>page=<%=i%>" class="page-link"><%=i+1%></a>
             <%}%>
         </div>
 

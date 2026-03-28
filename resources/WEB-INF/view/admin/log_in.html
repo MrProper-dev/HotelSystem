@@ -14,14 +14,13 @@
             <div class="page-title">Вход в аккаунт</div>
         </div>
 
-        <!-- Основной контейнер с формой -->
         <div class="login-container">
             <div class="form-title">Добро пожаловать</div>
 
-            <!-- Форма входа (отправляет данные на сервер) -->
-            <form method="POST" action="" id="loginForm">
+            <!-- Форма входа -->
+            <form method="POST" action="/hotelsystem/admin/login" id="loginForm">
                 <div class="form-fields">
-                    <!-- Электронная почта (логин) -->
+                    <!-- Логин -->
                     <div class="field-group">
                         <div class="field-label">Логин</div>
                         <div class="field-input">
@@ -43,30 +42,23 @@
                     <button type="submit" class="button primary">Войти</button>
                 </div>
             </form>
-            
         </div>
+
+        <!-- модальное окно (info) -->
+        <dialog id="infoModal" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="infoModalText">Сообщение по умолчанию.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="infoModalOk" class="button-primary">ОК</button>
+                </div>
+            </div>
+        </dialog>
 
         <div class="footer-placeholder">
             HavenStay — система управления номерным фондом
         </div>
     </div>
-
-    <script>
-
-        // Обработка отправки формы
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(loginForm);
-            const email = formData.get('email');
-            const password = formData.get('password');
-            
-            // В реальном проекте здесь был бы fetch или отправка формы
-            alert(`✅ Попытка входа\n\nEmail: ${email}\nПароль: ${'*'.repeat(password.length)}\n\nДанные отправлены на сервер для аутентификации.`);
-            
-            // Раскомментировать для реальной отправки:
-            // this.submit();
-        });
-    </script>
 </body>
 </html>

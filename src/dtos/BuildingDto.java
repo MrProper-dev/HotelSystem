@@ -14,6 +14,11 @@ public class BuildingDto {
         this.name = name;
     }
 
+    public BuildingDto(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public BuildingDto(Integer id, String name, String address, Integer floors) {
         this.id = id;
         this.name = name;

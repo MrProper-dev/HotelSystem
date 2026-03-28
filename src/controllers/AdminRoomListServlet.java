@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import services.BuildingService;
 import services.RoomService;
 
-@WebServlet("/rooms")
-public class RoomListServlet extends HttpServlet{
+@WebServlet("/admin/rooms")
+public class AdminRoomListServlet extends HttpServlet{
 
     private RoomService roomService;
     private BuildingService buildingService;
@@ -30,18 +30,22 @@ public class RoomListServlet extends HttpServlet{
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, String[]> paramsMap = req.getParameterMap();
 
-        List<RoomDto> rooms = roomService.getPage(paramsMap);
-        Integer roomsCount = roomService.getCount(paramsMap);
+        List<RoomDto> rooms = roomService.getRoomsPageForAdmin(paramsMap);
+        Integer roomsCount = roomService.getRoomsCountForAdmin(paramsMap);
         Integer pageCount = roomService.getPageCount(roomsCount);
         Integer maxFloor = buildingService.getMaxFloor();
         Integer maxGuests = roomService.getMaxGuests();
         List<BuildingDto> buildings = buildingService.getBuildings();
         Integer currentPage = 0;
         
+        System.out.println();
+        System.out.println(req.getQueryString());
+        System.out.println();
+
         String strCurrentPage = req.getParameter("page");
         if(strCurrentPage != null && !strCurrentPage.isEmpty()) {
             currentPage = Integer.parseInt(strCurrentPage);
-        }
+        }        
 
         req.setAttribute("rooms", rooms);
         req.setAttribute("roomsCount", roomsCount);
@@ -50,7 +54,7 @@ public class RoomListServlet extends HttpServlet{
         req.setAttribute("maxGuests", maxGuests);
         req.setAttribute("buildings", buildings);
         req.setAttribute("currentPage", currentPage);
-        req.getRequestDispatcher("/WEB-INF/view/client/list_of_rooms.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/admin/list_of_rooms.jsp").forward(req, resp);
     }
 
 }

@@ -17,20 +17,18 @@ function info(infotmation){
     });
 }
 
-// Обработка отправки формы
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(loginForm);
-    const email = formData.get('email');
+    const login = formData.get('login');
     const password = formData.get('password');
 
-
     const form = new URLSearchParams();
-    form.append("email", email);
+    form.append("login", login);
     form.append("password", password);
     
-    const answer = await fetch('/hotelsystem/login/api/v1', {
+    const answer = await fetch('/hotelsystem/admin/login/api/v1', {
         method : "POST",
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: form.toString()
@@ -44,7 +42,7 @@ loginForm.addEventListener('submit', async (e) => {
 
     const json = await answer.json();
 
-    if(json.wrongPassword === "true"){
+    if(json.isValid !== "true"){
         const information = 'Неправильный логин или пароль.';
         await info(information);
         return;
