@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import daos.utils.ConnectionProvider;
 import daos.utils.ConnectionProviderFactory;
@@ -20,6 +22,150 @@ public class ClientDao {
     private ClientDao(){}
     public static ClientDao getClientDao(){
         return instance;
+    }
+
+    public Integer getClientsCountWithFilters(String nameFilter, String phoneFilter, String emailFilter) {
+        final String sql = "SELECT COUNT(*) FROM clients";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        if (nameFilter != null && !nameFilter.isEmpty()) {
+            creator.addWhereAndCondition("name LIKE ?");
+            creator.addParam("%" + nameFilter + "%");
+        }
+        if (phoneFilter != null && !phoneFilter.isEmpty()) {
+            creator.addWhereAndCondition("phone LIKE ?");
+            creator.addParam("%" + phoneFilter + "%");
+        }
+        if (emailFilter != null && !emailFilter.isEmpty()) {
+            creator.addWhereAndCondition("email LIKE ?");
+            creator.addParam("%" + emailFilter + "%");
+        }
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {   
+            if (result.next()) {
+                return result.getInt(1);
+            }
+            return 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting clients count with filters failed", e);
+        }
+    }
+
+    public List<ClientDto> getClientsWithFilters(String nameFilter, String phoneFilter, String emailFilter, Integer pageNumber, Integer pageSize) {
+        final String sql = """
+                SELECT id, name, email, phone, is_blocked, created_at, last_log_in
+                FROM clients
+                """;
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        if (nameFilter != null && !nameFilter.isEmpty()) {
+            creator.addWhereAndCondition("name LIKE ?");
+            creator.addParam("%" + nameFilter + "%");
+        }
+        if (phoneFilter != null && !phoneFilter.isEmpty()) {
+            creator.addWhereAndCondition("phone LIKE ?");
+            creator.addParam("%" + phoneFilter + "%");
+        }
+        if (emailFilter != null && !emailFilter.isEmpty()) {
+            creator.addWhereAndCondition("email LIKE ?");
+            creator.addParam("%" + emailFilter + "%");
+        }
+        creator.addOrderBy("id ASC");
+        if (pageSize != null && pageSize >= 1) {
+            creator.addLimit();
+            creator.addParam(pageSize);
+        } else {
+            throw new RuntimeException("Page size can't be null and less than 1");
+        }
+        if (pageNumber != null && pageNumber >= 0) {
+            creator.addOffset();
+            creator.addParam(pageNumber * pageSize);
+        } else {
+            throw new RuntimeException("Page number can't be null and less than 0");
+        }
+        List<ClientDto> clients = new ArrayList<>();
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                ClientDto client = new ClientDto(
+                    result.getInt("id"),
+                    result.getString("email"),
+                    result.getString("phone"),
+                    result.getString("name"),
+                    result.getBoolean("is_blocked"));
+                clients.add(client);
+            }
+            return clients;
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting clients with filters failed", e);
+        }
+    }
+
+    public Boolean getClientBlockStatus(Integer clientId) {
+        if (clientId == null) {
+            throw new RuntimeException("Client id cannot be null");
+        }
+        final String sql = "SELECT is_blocked FROM clients";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(clientId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                return result.getBoolean("is_blocked");
+            } else {
+                throw new RuntimeException("Client with id " + clientId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting client block status failed", e);
+        }
+    }
+
+    public void toggleClientBlockStatus(Integer clientId) {
+        if (clientId == null) {
+            throw new RuntimeException("Client id cannot be null");
+        }
+        final String sql = "UPDATE clients SET is_blocked = NOT is_blocked";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(clientId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            int updatedRows = statement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new RuntimeException("Client with id " + clientId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Toggling client block status failed", e);
+        }
+    }
+
+    public ClientDto getClientContactInfo(Integer clientId) {
+        if (clientId == null) {
+            throw new RuntimeException("Client id cannot be null");
+        }
+        final String sql = "SELECT name, email, phone, is_blocked FROM clients";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(clientId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            if (result.next()) {
+                ClientDto client = new ClientDto();
+                client.setId(clientId);
+                client.setName(result.getString("name"));
+                client.setEmail(result.getString("email"));
+                client.setPhone(result.getString("phone"));
+                client.setBlocked(result.getBoolean("is_blocked"));
+                return client;
+            } else {
+                throw new RuntimeException("Client with id " + clientId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting client contact info failed", e);
+        }
     }
 
     public void updateClientLastLogin(Integer clientId) {

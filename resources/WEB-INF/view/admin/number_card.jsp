@@ -22,7 +22,7 @@
                 </a>
                 <div class="nav-links">
                     <a href="/hotelsystem/admin/rooms" class="nav-link">Номерной фонд</a>
-                    <a href="#" class="nav-link">Клиенты</a>
+                    <a href="/hotelsystem/admin/clients" class="nav-link">Клиенты</a>
                     <a href="#" class="nav-link">Статистика</a>
                 </div>
             </div>
@@ -37,9 +37,9 @@
         </div>
 
         <div class="room-detail-container">
-            <form id="roomForm" method="POST" action="" enctype="multipart/form-data">
+            <form id="roomForm" method="POST" action="" enctype="multipart/form-data" data-room-id="${room.id}">
                 <!-- Скрытое поле для загрузки фото -->
-                <input type="file" id="fileInput" name="room_image" accept="image/*">
+                <input type="file" id="fileInput" name="picture" accept="image/*">
                 
                 <!-- Статусная строка -->
                 <div class="status-bar">
@@ -50,14 +50,14 @@
                 <div class="section-label">Информация о номере</div>
                 <div class="info-grid">
                     <div class="photo-placeholder" id="photoPlaceholder">
-                        <img src="${room.picture}" alt="Номер 205" id="roomImage">
+                        <img src="/hotelsystem/images/rooms/${room.picture}" alt="Номер ${room.number}" id="roomImage">
                         <div class="upload-overlay">Нажмите, чтобы загрузить фото</div>
                     </div>
                     <div class="room-info">
                         <div class="info-row">
                             <span class="info-label">Номер комнаты</span>
                             <div class="info-value editable">
-                                <input type="text" name="room_number" value="${room.number}" required>
+                                <input type="number" name="number" value="${room.number}" required>
                             </div>
                         </div>
                         <div class="info-row">
@@ -130,42 +130,20 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <%
+                            List<BookingDto> bookingDtos = (List<BookingDto>) request.getAttribute("bookings");
+                            for(BookingDto bookingDto : bookingDtos){
+                            %>
                             <tr>
-                                <td>Петров Петр Петрович</td>
-                                <td>01.04.2026 - 05.04.2026</td>
-                                <td>Завершено</td>
+                                <td><%=bookingDto.getClient().getName()%></td>
+                                <td><%=bookingDto.getCheckInDate()%> - <%=bookingDto.getCheckOutDate()%></td>
+                                <td><%=bookingDto.getStatus() == BookingStatus.ACTIVE ? "Активно" : bookingDto.getStatus() == BookingStatus.COMPLETED ? "Завершено" : "Отменено"%></td>
                                 <td class="actions-cell">
-                                    <a href="#" class="guest-link">Профиль</a>
-                                    <a href="#" class="guest-link">Подробно</a>
+                                    <a href="/hotelsystem/admin/client/details/<%=bookingDto.getClient().getId()%>" class="guest-link">Профиль</a>
+                                    <a href="/hotelsystem/admin/booking/details/<%=bookingDto.getId()%>" class="guest-link">Подробно</a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Сидорова Анна Сергеевна</td>
-                                <td>15.03.2026 - 20.03.2026</td>
-                                <td>Завершено</td>
-                                <td class="actions-cell">
-                                    <a href="#" class="guest-link">Профиль</a>
-                                    <a href="#" class="guest-link">Подробно</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Козлов Дмитрий Николаевич</td>
-                                <td>10.02.2026 - 14.02.2026</td>
-                                <td>Завершено</td>
-                                <td class="actions-cell">
-                                    <a href="#" class="guest-link">Профиль</a>
-                                    <a href="#" class="guest-link">Подробно</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Иванова Мария Сергеевна</td>
-                                <td>05.01.2026 - 10.01.2026</td>
-                                <td>Завершено</td>
-                                <td class="actions-cell">
-                                    <a href="#" class="guest-link">Профиль</a>
-                                    <a href="#" class="guest-link">Подробно</a>
-                                </td>
-                            </tr>
+                            <%}%>
                         </tbody>
                     </table>
                 </div>

@@ -37,10 +37,6 @@ public class AdminRoomListServlet extends HttpServlet{
         Integer maxGuests = roomService.getMaxGuests();
         List<BuildingDto> buildings = buildingService.getBuildings();
         Integer currentPage = 0;
-        
-        System.out.println();
-        System.out.println(req.getQueryString());
-        System.out.println();
 
         String strCurrentPage = req.getParameter("page");
         if(strCurrentPage != null && !strCurrentPage.isEmpty()) {

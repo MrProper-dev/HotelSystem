@@ -1,9 +1,13 @@
 package services;
 
+import java.util.List;
+
 import daos.ClientDao;
 import dtos.ClientDto;
 
 public class ClientService {
+
+    private Integer PAGE_SIZE = 4;
 
     private static final ClientService instance = new ClientService();
     private ClientService(){}
@@ -12,6 +16,34 @@ public class ClientService {
     }
 
     private ClientDao clientDao = ClientDao.getClientDao();
+
+    public Integer getPagesCount(Integer clientsCount){
+        Integer pageCount = clientsCount / PAGE_SIZE;
+        if(pageCount % PAGE_SIZE != 0){
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public Integer getClientsCountWithFilters(String nameFilter, String phoneFilter, String emailFilter){
+        return clientDao.getClientsCountWithFilters(nameFilter, phoneFilter, emailFilter);
+    }
+
+    public List<ClientDto> getClientsWithFilters(String nameFilter, String phoneFilter, String emailFilter, Integer page){
+        return clientDao.getClientsWithFilters(nameFilter, phoneFilter, emailFilter, page, PAGE_SIZE);
+    }
+
+    public Boolean isBlocked(Integer clientId){
+        return clientDao.getClientBlockStatus(clientId);
+    }
+
+    public void switchStatus(Integer clientId){
+        clientDao.toggleClientBlockStatus(clientId);
+    }
+
+    public ClientDto getClientByIdForAdmin(Integer clientId){
+        return clientDao.getClientContactInfo(clientId);
+    }
 
     public void updateClientLogIn(Integer clientId){
         if(clientId == null){

@@ -33,6 +33,14 @@ public class ClientDto {
         this.name = name;
     }
 
+    public ClientDto(Integer id, String email, String phone, String name, Boolean blocked) {
+        this.id = id;
+        this.email = email;
+        this.phone = phone;
+        this.name = name;
+        this.blocked = blocked;
+    }
+
     public ClientDto(Integer id, String email, String password, String phone, String name) {
         this.id = id;
         this.email = email;

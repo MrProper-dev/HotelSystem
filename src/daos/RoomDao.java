@@ -27,6 +27,37 @@ public class RoomDao {
         return instance;
     }
 
+    public void updateRoom(RoomDto room) {
+        if (room == null || room.getId() == null || room.getBuilding().getId() == null) {
+            throw new RuntimeException("Room, room id and building id cannot be null");
+        }
+        final StringBuilder sql = new StringBuilder("UPDATE rooms SET building_id = ?, number = ?, floor = ?, sleeping_places = ?, price = ?, description = ?");
+        if(room.getPicture() != null){
+            sql.append(", picture = ?");
+        }
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql.toString());
+        creator.addParam(room.getBuilding().getId());
+        creator.addParam(room.getNumber() != null ? room.getNumber() : 0);
+        creator.addParam(room.getFloor() != null ? room.getFloor() : 0);
+        creator.addParam(room.getSleepingPlaces() != null ? room.getSleepingPlaces() : 0);
+        creator.addParam(room.getPrice() != null ? room.getPrice() : 0.0f);
+        creator.addParam(room.getDescription() != null ? room.getDescription() : "");
+        if(room.getPicture() != null){
+            creator.addParam(room.getPicture());
+        }
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(room.getId());
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            int updatedRows = statement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new RuntimeException("Room with id " + room.getId() + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Updating room failed", e);
+        }
+    }
+
     public RoomDto getRoomByIdWithStatus(Integer roomId) {
         if (roomId == null) {
             throw new RuntimeException("Room id cannot be null");

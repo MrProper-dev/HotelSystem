@@ -29,6 +29,58 @@ public class BookingDao {
         return instance;
     }
 
+    public List<BookingDto> getBookingsByClientId(Integer clientId) {
+        if (clientId == null) {
+            throw new RuntimeException("Client id cannot be null");
+        }
+        final String sql = """
+                SELECT b.id, b.check_in_date, b.check_out_date, b.total_price, b.status,
+                    r.number as room_number,
+                    bu.name as building_name,
+                    COUNT(g.id) as guests_count
+                FROM bookings b
+                JOIN rooms r ON b.room_id = r.id
+                JOIN buildings bu ON r.building_id = bu.id
+                LEFT JOIN guests g ON b.id = g.booking_id
+                WHERE b.client_id = ?
+                GROUP BY b.id, b.check_in_date, b.check_out_date, b.total_price, b.status, r.number, bu.name
+                ORDER BY b.check_in_date DESC
+                """;
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addParam(clientId);
+        List<BookingDto> bookings = new ArrayList<>();
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                BuildingDto building = new BuildingDto();
+                building.setName(result.getString("building_name"));
+                RoomDto room = new RoomDto();
+                room.setNumber(result.getInt("room_number"));
+                room.setBuilding(building);
+                ClientDto client = new ClientDto(clientId);
+                BookingDto booking = new BookingDto(
+                    result.getInt("id"),
+                    client,
+                    room,
+                    result.getDate("check_in_date").toLocalDate(),
+                    result.getDate("check_out_date").toLocalDate(),
+                    result.getFloat("total_price"),
+                    mapToStatus(result.getString("status"))
+                );
+                List<GuestDto> guests = new ArrayList<>();
+                for (int i = 0; i < result.getInt("guests_count"); i++) {
+                    guests.add(new GuestDto());
+                }
+                booking.setGuests(guests);
+                bookings.add(booking);
+            }
+            return bookings;
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting bookings by client id failed", e);
+        }
+    }
+
     public List<BookingDto> getBookingsByRoomId(Integer roomId) {
         if (roomId == null) {
             throw new RuntimeException("Room id cannot be null");
@@ -69,8 +121,8 @@ public class BookingDao {
 
     public BookingDto getBookingById(Integer bookingId) {
         final String root = """
-                SELECT b.id, b.status, b.check_in_date, b.check_out_date, b.total_price, r.number, r.floor, r.picture, r.price, r.sleeping_places, bu.name as building_name, g.full_name, g.birth_date, g.series_and_number
-                FROM bookings b JOIN rooms r ON r.id = b.room_id JOIN buildings bu ON bu.id = r.building_id JOIN guests g ON g.booking_id = b.id
+                SELECT b.id, b.status, b.check_in_date, b.check_out_date, b.total_price, r.number, r.floor, r.picture, r.price, r.sleeping_places, bu.name as building_name
+                FROM bookings b JOIN rooms r ON r.id = b.room_id JOIN buildings bu ON bu.id = r.building_id
                 """;
         PreparedStatementCreator creator = new PreparedStatementCreator(root);
         if (bookingId == null) {

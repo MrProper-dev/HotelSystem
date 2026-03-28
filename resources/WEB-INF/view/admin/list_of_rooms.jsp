@@ -21,7 +21,7 @@
                 </a>
                 <div class="nav-links">
                     <a href="#" class="nav-link active">Номерной фонд</a>
-                    <a href="#" class="nav-link">Клиенты</a>
+                    <a href="/hotelsystem/admin/clients" class="nav-link">Клиенты</a>
                     <a href="#" class="nav-link">Статистика</a>
                 </div>
             </div>

@@ -42,7 +42,7 @@
                     <div class="section-label">Выбранная комната</div>
                     <div class="room-card-fixed">
                         <div class="room-photo">
-                            <img src="${room.picture}" alt="Номер: ${room.number}">
+                            <img src="/hotelsystem/images/rooms/${room.picture}" alt="Номер: ${room.number}">
                         </div>
                         <div class="room-info-fixed">
                             <div class="room-type">Номер: ${room.number}</div>

@@ -21,6 +21,60 @@ public class GuestDao {
     public static GuestDao getGuestDao() {
         return instance;
     }
+
+    public void updateGuestsByBookingId(Integer bookingId, List<GuestDto> guests) {
+        if (bookingId == null) {
+            throw new RuntimeException("Booking id cannot be null");
+        }
+        if (guests == null) {
+            throw new RuntimeException("Guests list cannot be null");
+        }
+        Connection connection = null;
+        try {
+            connection = connectionProvider.getConnection();
+            connection.setAutoCommit(false);
+            String deleteSql = "DELETE FROM guests";
+            PreparedStatementCreator deleteCreator = new PreparedStatementCreator(deleteSql);
+            deleteCreator.addWhereAndCondition("booking_id = ?");
+            deleteCreator.addParam(bookingId);
+            PreparedStatement deleteStatement = deleteCreator.createPreparedStatement(connection);
+            deleteStatement.executeUpdate();
+            if (!guests.isEmpty()) {
+                String insertSql = "INSERT INTO guests (booking_id, full_name, birth_date, series_and_number) VALUES ";
+                PreparedStatementCreator insertCreator = new PreparedStatementCreator(insertSql);
+                for (GuestDto guest : guests) {
+                    insertCreator.addValue("(?, ?, ?, ?)");
+                    insertCreator.addParam(bookingId);
+                    insertCreator.addParam(guest.getFullName() != null ? guest.getFullName() : "");
+                    insertCreator.addParam(guest.getBirthDate() != null ? 
+                        java.sql.Date.valueOf(guest.getBirthDate()) : null);
+                    insertCreator.addParam(guest.getSeriesAndNumber() != null ? guest.getSeriesAndNumber() : "");
+                }
+                PreparedStatement insertStatement = insertCreator.createPreparedStatement(connection);
+                insertStatement.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackException) {
+                throw new RuntimeException("Rollback failed", rollbackException);
+            }
+            throw new RuntimeException("Updating guests for booking failed", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Connection closing failed", e);
+            }
+        }
+    }
     
     public List<GuestDto> getGuestsByBookingId(Integer bookingId) {
         final String sql = "SELECT full_name, birth_date, series_and_number FROM guests";

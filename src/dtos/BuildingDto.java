@@ -6,6 +6,11 @@ public class BuildingDto {
     private String address;
     private Integer floors;
 
+    
+
+    public BuildingDto() {
+    }
+
     public BuildingDto(Integer id) {
         this.id = id;
     }

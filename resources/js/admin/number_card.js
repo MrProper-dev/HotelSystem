@@ -21,11 +21,9 @@ function info(infotmation){
 const photoPlaceholder = document.getElementById('photoPlaceholder');
 const fileInput = document.getElementById('fileInput');
 const roomImage = document.getElementById('roomImage');
-
 photoPlaceholder.addEventListener('click', function() {
     fileInput.click();
 });
-
 fileInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -50,7 +48,7 @@ buildingSelect.addEventListener('change', function() {
         floorSelect.remove(floorSelect.options.length - 1);
     }
     while (floorSelect.options.length < maxFloors) {
-        const newFloorNumber = floorSelect.options.length + 1; // следующий номер этажа
+        const newFloorNumber = floorSelect.options.length + 1;
         const option = document.createElement('option');
         option.value = newFloorNumber;
         option.textContent = getFloorText(newFloorNumber)`${newFloorNumber} этаж`;
@@ -62,17 +60,18 @@ buildingSelect.addEventListener('change', function() {
 
 // Обработка отправки формы
 const roomForm = document.getElementById('roomForm');
-roomForm.addEventListener('submit', function(e) {
+roomForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const roomId = roomForm.dataset.roomId;
     const formData = new FormData(roomForm);
-    let dataString = '';
-    for (let [key, value] of formData.entries()) {
-        if (key === 'room_image' && value instanceof File && value.name) {
-            dataString += `${key}: ${value.name}\n`;
-        } else if (key !== 'room_image') {
-            dataString += `${key}: ${value}\n`;
-        }
+    const response = await fetch(`/hotelsystem/admin/room/update/${roomId}`, {
+        method: 'POST',
+        body: formData
+    });
+    
+    if (response.ok) {
+        await info('Комната успешно обновлена!');
+    } else {
+        await info('Что-то не так :(');
     }
-    alert(`✅ Данные номера успешно обновлены!\n\nСервер получил:\n${dataString}`);
-    // this.submit(); - раскомментировать для реальной отправки
 });

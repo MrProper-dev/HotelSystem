@@ -47,7 +47,7 @@
                 <div class="section-label">Выбранная комната</div>
                 <div class="room-card-fixed">
                     <div class="room-photo">
-                        <img src="${booking.room.picture != null ? booking.room.picture : 'https://placehold.co/400x300/E8D9C5/6C9A8B?text=Номер'}" alt="Комната ${booking.room.number}">
+                        <img src="/hotelsystem/images/rooms/${booking.room.picture}" alt="Комната ${booking.room.number}">
                     </div>
                     <div class="room-info-fixed">
                         <div class="room-type">Номер ${booking.room.number}</div>

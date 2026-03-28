@@ -28,6 +28,10 @@ public class BookingService {
     private RoomDao roomDao = RoomDao.getRoomDao();
     private GuestDao guestDao = GuestDao.getGuestDao();
 
+    public List<BookingDto> getBookingByClientId(Integer clientId){
+        return bookingDao.getBookingsByClientId(clientId);
+    }
+
     public List<BookingDto> getBookingsByRoomId(Integer roomId){
         return bookingDao.getBookingsByRoomId(roomId);
     }

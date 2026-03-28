@@ -36,7 +36,7 @@
             <!-- Детальная сетка: фото + параметры -->
             <div class="detail-grid">
                 <div class="main-image-placeholder">
-                    <img src="${room.picture}" alt="Фото номера ${room.number}">
+                    <img src="/hotelsystem/images/rooms/${room.picture}" alt="Фото номера ${room.number}">
                 </div>
                 <div class="room-info">
                     <div class="room-general">Уютный номер для спокойного отдыха</div>

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import daos.RoomDao;
+import dtos.BuildingDto;
 import dtos.RoomDto;
 import dtos.RoomStatus;
 
@@ -20,6 +21,27 @@ public class RoomService {
     }
     
     private final RoomDao roomDao = RoomDao.getRoomDao();
+
+    public void updateRoom(Integer roomId, Integer buildingId, Integer number, Integer floor, 
+                       Integer sleepingPlaces, Float price, String picture, String description) {
+        if (roomId == null) {
+            throw new RuntimeException("Room id cannot be null");
+        }
+        if (buildingId == null) {
+            throw new RuntimeException("Building id cannot be null");
+        }
+        BuildingDto building = new BuildingDto(buildingId);
+        RoomDto room = new RoomDto(
+            roomId, 
+            building, 
+            number, 
+            floor, 
+            sleepingPlaces, 
+            price, 
+            picture, 
+            description);
+        roomDao.updateRoom(room);
+    }
 
     public RoomDto getRoomByIdWithStatus(Integer roomId){
         return roomDao.getRoomByIdWithStatus(roomId);

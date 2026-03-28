@@ -12,6 +12,9 @@ public class RoomDto {
     private String description;
     private RoomStatus status;
 
+    public RoomDto() {
+    }
+
     public RoomDto(Integer id) {
         this.id = id;
     }

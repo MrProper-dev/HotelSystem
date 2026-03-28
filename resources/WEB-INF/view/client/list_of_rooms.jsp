@@ -113,7 +113,7 @@
             <%for(RoomDto room : (List<RoomDto>)request.getAttribute("rooms")){%>
             <div class="room-card">
                 <div class="room-image">
-                    <img src="<%=room.getPicture()%>" alt="Фото номера: <%=room.getNumber()%>">
+                    <img src="/hotelsystem/images/rooms/<%=room.getPicture()%>" alt="Фото номера: <%=room.getNumber()%>">
                 </div>
                 <div class="room-general">Номер: <%=room.getNumber()%></div>
                 <div class="attrs">

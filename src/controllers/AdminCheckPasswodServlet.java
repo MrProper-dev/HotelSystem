@@ -11,8 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import services.AdminService;
 
 // TODO: добавить задачу, которая будет обновлять статус у броней
-// TODO: доделать старницу (отправка запроса на изменение и список последних бронирований)
-
 @WebServlet("/admin/login/api/v1")
 public class AdminCheckPasswodServlet extends HttpServlet{
 

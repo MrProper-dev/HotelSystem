@@ -32,6 +32,11 @@ public class ClientLogInServlet extends HttpServlet{
 
         Integer clientId = clientService.chekPassword(email, password);
 
+        if(clientService.isBlocked(clientId)){
+            resp.sendError(401);
+            return;
+        }
+
         if(clientId != null){
             clientService.updateClientLogIn(clientId);
             HttpSession session = req.getSession();
