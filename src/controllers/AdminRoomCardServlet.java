@@ -59,7 +59,7 @@ public class AdminRoomCardServlet extends HttpServlet{
         req.setAttribute("room", room);
         req.setAttribute("bookings", bookings);
         req.setAttribute("buildings", buildings);
-        req.getRequestDispatcher("/WEB-INF/view/admin/number_card.jsp").forward(req, resp);;
+        req.getRequestDispatcher("/WEB-INF/view/admin/number_card.jsp").forward(req, resp);
     }
 
 }

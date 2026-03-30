@@ -18,6 +18,28 @@ public class AdminDto {
         this.password = password;
     }
 
+    public AdminDto(String login, String password, String fullName, String phone) {
+        this.login = login;
+        this.password = password;
+        this.fullName = fullName;
+        this.phone = phone;
+    }
+
+    public AdminDto(Integer id, String login, String fullName, String phone) {
+        this.id = id;
+        this.login = login;
+        this.fullName = fullName;
+        this.phone = phone;
+    }
+
+    public AdminDto(Integer id, String login, String password, String fullName, String phone) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.fullName = fullName;
+        this.phone = phone;
+    }
+
     public AdminDto(Integer id, String login, String password, String fullName, String phone, LocalDateTime creationAt,
             LocalDateTime last_log_in) {
         this.id = id;

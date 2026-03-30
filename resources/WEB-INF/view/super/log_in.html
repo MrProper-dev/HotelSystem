@@ -4,184 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Отель · Вход в аккаунт</title>
-    <style>
-        /* ------------------------------
-           Мягкая цветовая гамма
-           Основной цвет: #6C9A8B
-           Акцент: #E8D9C5
-        ------------------------------ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #EFF3F0;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            padding: 30px 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            max-width: 1280px;
-            width: 100%;
-            background-color: #FFFFFF;
-            border-radius: 32px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-            padding: 28px 32px;
-        }
-
-        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 650;
-            color: #2B4B3E;
-            letter-spacing: -0.3px;
-            background: transparent;
-            padding: 0;
-        }
-
-        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
-        .login-container {
-            background: #FDFBF8;
-            border-radius: 28px;
-            padding: 32px;
-            margin-bottom: 20px;
-            border: 1px solid #EDE8E0;
-            max-width: 520px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* ===== ЗАГОЛОВОК ФОРМЫ ===== */
-        .form-title {
-            font-size: 24px;
-            font-weight: 650;
-            color: #2B4B3E;
-            margin-bottom: 28px;
-            text-align: center;
-            background: transparent;
-            padding: 0;
-        }
-
-        /* ===== ПОЛЯ ФОРМЫ ===== */
-        .form-fields {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .field-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #5B6F66;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .field-input {
-            background: white;
-            border: 1px solid #DFD9CF;
-            border-radius: 20px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            transition: all 0.2s;
-        }
-        .field-input input {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-size: 16px;
-            font-family: inherit;
-            color: #2D443B;
-            outline: none;
-        }
-        .field-input input::placeholder {
-            color: #B9C9BF;
-        }
-        .field-input:focus-within {
-            border-color: #6C9A8B;
-            box-shadow: 0 0 0 2px rgba(108, 154, 139, 0.2);
-        }
-
-        /* ===== КНОПКИ ДЕЙСТВИЙ ===== */
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            margin: 8px 0 24px;
-        }
-
-        .button.primary {
-            background: #6C9A8B;
-            border: none;
-            border-radius: 60px;
-            padding: 14px 48px;
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            width: 100%;
-        }
-        .button.primary:hover {
-            background: #588173;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(108, 154, 139, 0.3);
-        }
-
-        .footer-placeholder {
-            margin-top: 30px;
-            border-top: 1px solid #EBE5DB;
-            padding: 24px 0 8px;
-            font-size: 13px;
-            color: #A7B8AE;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .app-container {
-                padding: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/hotelsystem/css/super/log_in.css">
+    <script src="/hotelsystem/js/super/log_in.js" defer></script>
 </head>
 <body>
     <div class="app-container">
 
-        <!-- Заголовок страницы -->
         <div class="page-header">
             <div class="page-title">Вход в аккаунт</div>
         </div>
 
-        <!-- Основной контейнер с формой -->
         <div class="login-container">
             <div class="form-title">Добро пожаловать</div>
 
-            <!-- Форма входа (отправляет данные на сервер) -->
-            <form method="POST" action="" id="loginForm">
+            <!-- Форма входа -->
+            <form method="POST" action="/hotelsystem/super/login" id="loginForm">
                 <div class="form-fields">
-                    <!-- Электронная почта (логин) -->
+                    <!-- Логин -->
                     <div class="field-group">
                         <div class="field-label">Логин</div>
                         <div class="field-input">
@@ -203,30 +42,23 @@
                     <button type="submit" class="button primary">Войти</button>
                 </div>
             </form>
-            
         </div>
+
+        <!-- модальное окно (info) -->
+        <dialog id="infoModal" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="infoModalText">Сообщение по умолчанию.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="infoModalOk" class="button-primary">ОК</button>
+                </div>
+            </div>
+        </dialog>
 
         <div class="footer-placeholder">
             HavenStay — система управления номерным фондом
         </div>
     </div>
-
-    <script>
-
-        // Обработка отправки формы
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(loginForm);
-            const email = formData.get('email');
-            const password = formData.get('password');
-            
-            // В реальном проекте здесь был бы fetch или отправка формы
-            alert(`✅ Попытка входа\n\nEmail: ${email}\nПароль: ${'*'.repeat(password.length)}\n\nДанные отправлены на сервер для аутентификации.`);
-            
-            // Раскомментировать для реальной отправки:
-            // this.submit();
-        });
-    </script>
 </body>
 </html>

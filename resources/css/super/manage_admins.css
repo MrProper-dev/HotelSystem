@@ -1,0 +1,557 @@
+
+/* ------------------------------
+    Мягкая цветовая гамма
+    Основной цвет: #6C9A8B
+    Акцент: #E8D9C5
+    Без эмодзи (кроме логотипа)
+------------------------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #EFF3F0;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    max-width: 1280px;
+    width: 100%;
+    background-color: #FFFFFF;
+    border-radius: 32px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+    padding: 28px 32px;
+}
+
+/* ===== ВЕРХНЯЯ НАВИГАЦИЯ ДЛЯ СУПЕРПОЛЬЗОВАТЕЛЯ ===== */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E2E4DF;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo-block {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.logo-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #6C9A8B;
+    padding: 8px 20px 8px 16px;
+    border-radius: 60px;
+    box-shadow: 0 2px 6px rgba(108, 154, 139, 0.2);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+.logo-placeholder:hover {
+    transform: scale(1.02);
+}
+.logo-icon {
+    font-size: 28px;
+}
+.logo-text {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: white;
+}
+.logo-accent {
+    font-weight: 400;
+    font-size: 13px;
+    opacity: 0.85;
+    margin-left: 4px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-link {
+    background: transparent;
+    border: none;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4E46;
+    border-radius: 40px;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+.nav-link:hover {
+    background: #F0F3EE;
+    color: #2C5A4A;
+}
+.nav-link.active {
+    background: #6C9A8B;
+    color: white;
+    box-shadow: 0 2px 6px rgba(108, 154, 139, 0.3);
+}
+
+/* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 650;
+    color: #2B4B3E;
+    letter-spacing: -0.3px;
+    background: transparent;
+    padding: 0;
+}
+
+/* ===== ФОРМА ДОБАВЛЕНИЯ АДМИНИСТРАТОРА ===== */
+.add-section {
+    background: #FDFBF8;
+    border-radius: 28px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    border: 1px solid #EDE8E0;
+}
+
+.add-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2B4B3E;
+    margin-bottom: 20px;
+    background: transparent;
+    padding: 0;
+}
+
+.add-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 24px;
+    align-items: flex-end;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 180px;
+    gap: 6px;
+}
+
+.field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5B6F66;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.field-input {
+    background: white;
+    border: 1px solid #DFD9CF;
+    border-radius: 20px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    transition: 0.2s;
+}
+.field-input input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+    color: #2D443B;
+    outline: none;
+}
+.field-input input::placeholder {
+    color: #B9C9BF;
+}
+.field-input:hover {
+    border-color: #BEC9B7;
+}
+
+.add-button {
+    background: #6C9A8B;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 28px;
+    font-weight: 600;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    height: 44px;
+    display: flex;
+    align-items: center;
+}
+.add-button:hover {
+    background: #588173;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+}
+
+/* ===== ПОИСК АДМИНИСТРАТОРОВ ===== */
+.search-section {
+    background: #FDFBF8;
+    border-radius: 28px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    border: 1px solid #EDE8E0;
+}
+
+.search-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2B4B3E;
+    margin-bottom: 20px;
+    background: transparent;
+    padding: 0;
+}
+
+.search-form {
+    width: 100%;
+}
+
+.search-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 24px;
+    align-items: flex-end;
+}
+
+.search-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 180px;
+    gap: 6px;
+}
+
+.search-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5B6F66;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search-field {
+    background: white;
+    border: 1px solid #DFD9CF;
+    border-radius: 20px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+.search-field input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+    color: #2D443B;
+    outline: none;
+}
+.search-field input::placeholder {
+    color: #B9C9BF;
+}
+
+.search-button {
+    background: #6C9A8B;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 28px;
+    font-weight: 600;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    height: 44px;
+    display: flex;
+    align-items: center;
+}
+.search-button:hover {
+    background: #588173;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(108, 154, 139, 0.3);
+}
+
+/* ===== СПИСОК АДМИНИСТРАТОРОВ ===== */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 12px 0 20px;
+    flex-wrap: wrap;
+}
+
+.list-header-left {
+    font-size: 20px;
+    font-weight: 650;
+    color: #2B4B3E;
+    background: transparent;
+    padding: 0;
+}
+
+.list-header-right {
+    background: #F0F1EC;
+    border-radius: 40px;
+    padding: 6px 20px;
+    color: #4C6F60;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.admins-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 30px;
+}
+
+.admins-table th {
+    background: #F6F4EF;
+    border-bottom: 2px solid #EDE8E0;
+    padding: 14px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: #5B6F66;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.admins-table td {
+    background: transparent;
+    border-bottom: 1px solid #EDE8E0;
+    padding: 14px 12px;
+    font-size: 14px;
+    color: #4A6156;
+}
+
+.action-link {
+    background: transparent;
+    border: 1px solid #DFD6CA;
+    border-radius: 40px;
+    padding: 6px 14px;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4A6A5B;
+    margin-right: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.action-link:hover {
+    background: #F0F3EE;
+    border-color: #C2CDBC;
+}
+.action-link.edit {
+    border-color: #6C9A8B;
+    color: #6C9A8B;
+}
+.action-link.edit:hover {
+    background: #E0F0E8;
+    border-color: #6C9A8B;
+}
+.action-link.delete {
+    border-color: #E8CFC2;
+    color: #B67B5E;
+}
+.action-link.delete:hover {
+    background: #F9EFE8;
+    border-color: #B67B5E;
+}
+.action-link.save {
+    background: #6C9A8B;
+    border-color: #6C9A8B;
+    color: white;
+}
+.action-link.save:hover {
+    background: #588173;
+}
+.action-link.cancel {
+    border-color: #DFD6CA;
+    color: #4A6A5B;
+}
+
+/* Режим редактирования */
+.editable-input {
+    background: white;
+    border: 1px solid #DFD9CF;
+    border-radius: 16px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #2D443B;
+    outline: none;
+    width: 100%;
+    transition: 0.2s;
+}
+.editable-input:focus {
+    border-color: #6C9A8B;
+    box-shadow: 0 0 0 2px rgba(108, 154, 139, 0.2);
+}
+
+/* ===== ПАГИНАЦИЯ ===== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.page-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 12px;
+    background: white;
+    border: 1px solid #DFD6CA;
+    border-radius: 44px;
+    color: #4A6A5B;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 15px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.page-item:hover {
+    background: #F0F3EE;
+    border-color: #C2CDBC;
+}
+.page-item.active {
+    background: #6C9A8B;
+    border-color: #6C9A8B;
+    color: white;
+}
+
+.footer-placeholder {
+    margin-top: 30px;
+    border-top: 1px solid #EBE5DB;
+    padding: 24px 0 8px;
+    font-size: 13px;
+    color: #A7B8AE;
+    text-align: center;
+}
+
+/* --- Модальные окна (dialog) --- */
+.modal-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(400px, 90vw);
+  height: min(220px, 80vh);
+  border: 1px solid #EDE8E0;
+  border-radius: 24px;
+  padding: 0;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+  font-family: inherit;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.modal-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.modal-body {
+  padding: 32px 32px 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal-body p {
+  font-size: 17px;
+  font-weight: 500;
+  color: #3A4E46;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+}
+
+.modal-footer {
+  padding: 16px 32px 28px;
+  border-top: 1px solid #EDE8E0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.confirm-buttons {
+  justify-content: space-between;
+}
+
+.button-primary {
+    background: #6C9A8B;
+    border: none;
+    border-radius: 60px;
+    padding: 14px 48px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.button-primary:hover {
+    background: #588173;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(108, 154, 139, 0.3);
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        padding: 20px;
+    }
+    .add-form, .search-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .admins-table {
+        display: block;
+        overflow-x: auto;
+    }
+    .top-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .logo-block {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

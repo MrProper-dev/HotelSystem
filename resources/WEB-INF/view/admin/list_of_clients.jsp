@@ -23,7 +23,6 @@
                 <div class="nav-links">
                     <a href="/hotelsystem/admin/rooms" class="nav-link">Номерной фонд</a>
                     <a href="#" class="nav-link active">Клиенты</a>
-                    <a href="#" class="nav-link">Статистика</a>
                 </div>
             </div>
             <form action="/hotelsystem/admin/logout" method="get" class="logout-form">
