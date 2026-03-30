@@ -159,8 +159,8 @@
             <div class="action-buttons">
                 <form method="POST" action="" class="cancel-form">
                     <button type="submit" class="button cancel" id="cancelBookingBtn" 
-                            ${booking.status == 'CANCELED' ? 'disabled' : ''}
-                            style="${booking.status == 'CANCELED' ? 'opacity: 0.5; cursor: not-allowed;' : ''}"
+                            ${booking.status != 'ACTIVE' ? 'disabled' : ''}
+                            style="${booking.status != 'ACTIVE' ? 'opacity: 0.5; cursor: not-allowed;' : ''}"
                             data-booking-id="${booking.id}">
                         🗑️ Отменить бронь
                     </button>

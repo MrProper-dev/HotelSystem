@@ -27,6 +27,121 @@ public class RoomDao {
         return instance;
     }
 
+    public void createRoom(Integer number, Integer floor, Integer buildingId) {
+        if (number == null) {
+            throw new RuntimeException("Room number cannot be null");
+        }
+        if (floor == null) {
+            throw new RuntimeException("Room floor cannot be null");
+        }
+        if (buildingId == null) {
+            throw new RuntimeException("Building id cannot be null");
+        }
+        final String sql = "INSERT INTO rooms (number, floor, building_id, sleeping_places, price, picture, description) VALUES";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addValue("(?, ?, ?, 0, 0.00, '', '')");
+        creator.addParam(number);
+        creator.addParam(floor);
+        creator.addParam(buildingId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Creating room failed", e);
+        }
+    }
+
+    public void deleteRoom(Integer roomId) {
+        if (roomId == null) {
+            throw new RuntimeException("Room id cannot be null");
+        }
+        final String sql = "DELETE FROM rooms";
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        creator.addWhereAndCondition("id = ?");
+        creator.addParam(roomId);
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection)) {
+            int deletedRows = statement.executeUpdate();
+            if (deletedRows == 0) {
+                throw new RuntimeException("Room with id " + roomId + " not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Deleting room failed", e);
+        }
+    }
+
+    public Integer getRoomsCountWithFilters(Integer floorFilter, Integer buildingIdFilter) {
+        final String sql = """
+                SELECT COUNT(*) FROM rooms r
+                JOIN buildings b ON r.building_id = b.id 
+                """;
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        if (floorFilter != null) {
+            creator.addWhereAndCondition("r.floor = ?");
+            creator.addParam(floorFilter);
+        }
+        if (buildingIdFilter != null) {
+            creator.addWhereAndCondition("r.building_id = ?");
+            creator.addParam(buildingIdFilter);
+        }
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting rooms with filters failed", e);
+        }
+    }
+
+    public List<RoomDto> getRoomsWithFilters(Integer floorFilter, Integer buildingIdFilter, Integer pageNumber, Integer pageSize) {
+        final String sql = """
+                SELECT r.id, r.number, r.floor, b.name as building_name FROM rooms r
+                JOIN buildings b ON r.building_id = b.id 
+                """;
+        PreparedStatementCreator creator = new PreparedStatementCreator(sql);
+        if (floorFilter != null) {
+            creator.addWhereAndCondition("r.floor = ?");
+            creator.addParam(floorFilter);
+        }
+        if (buildingIdFilter != null) {
+            creator.addWhereAndCondition("r.building_id = ?");
+            creator.addParam(buildingIdFilter);
+        }
+        creator.addOrderBy("r.id ASC");
+        if (pageSize != null && pageSize >= 1) {
+            creator.addLimit();
+            creator.addParam(pageSize);
+        } else {
+            throw new RuntimeException("Page size can't be null and less than 1");
+        }
+        if (pageNumber != null && pageNumber >= 0) {
+            creator.addOffset();
+            creator.addParam(pageNumber * pageSize);
+        } else {
+            throw new RuntimeException("Page number can't be null and less than 0");
+        }
+        List<RoomDto> rooms = new ArrayList<>();
+        try (Connection connection = connectionProvider.getConnection();
+            PreparedStatement statement = creator.createPreparedStatement(connection);
+            ResultSet result = statement.executeQuery()) {
+            
+            while (result.next()) {
+                BuildingDto building = new BuildingDto();
+                building.setName(result.getString("building_name"));
+                RoomDto room = new RoomDto();
+                room.setId(result.getInt("id"));
+                room.setNumber(result.getInt("number"));
+                room.setFloor(result.getInt("floor"));
+                room.setBuilding(building);
+                rooms.add(room);
+            }
+            return rooms;
+        } catch (SQLException e) {
+            throw new RuntimeException("Getting rooms with filters failed", e);
+        }
+    }
+
     public void updateRoom(RoomDto room) {
         if (room == null || room.getId() == null || room.getBuilding().getId() == null) {
             throw new RuntimeException("Room, room id and building id cannot be null");

@@ -59,7 +59,7 @@
                             <div class="booking-actions">
                                 <a href="/hotelsystem/booking/details/<%=booking.getId()%>" class="action-btn">Подробнее</a>
                                 <form method="post" action="" class="cancel-form">
-                                    <button type="submit" class="action-btn cancel" data-booking-id="<%=booking.getId()%>" <%=status==BookingStatus.CANCELED ? "disabled style=\"opacity: 0.4; cursor: not-allowed;\"" : ""%> >Отменить</button>
+                                    <button type="submit" class="action-btn cancel" data-booking-id="<%=booking.getId()%>" <%=status!=BookingStatus.ACTIVE ? "disabled style=\"opacity: 0.4; cursor: not-allowed;\"" : ""%> >Отменить</button>
                                 </form>
                             </div>
                         </div>

@@ -14,13 +14,37 @@ public class RoomService {
 
     private final Integer PAGE_SIZE = 4;
 
+    private final RoomDao roomDao = RoomDao.getRoomDao();
+
     private static final RoomService instance = new RoomService();
     private RoomService(){}
     public static RoomService getRoomService(){
         return instance;
     }
-    
-    private final RoomDao roomDao = RoomDao.getRoomDao();
+
+    public void createRoom(Integer roomNumber, Integer buildingId, Integer floor){
+        roomDao.createRoom(roomNumber, floor, buildingId);
+    }
+
+    public void deleteRoomById(Integer roomId){
+        roomDao.deleteRoom(roomId);
+    }
+
+    public Integer getPageCountForSuper(Integer roomsCount){
+        Integer pageCount = roomsCount / PAGE_SIZE;
+        if(roomsCount % PAGE_SIZE != 0){
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public Integer getRoomsCountForSuperWithFilters(Integer floorFilter, Integer buildingIdFilter){
+        return roomDao.getRoomsCountWithFilters(floorFilter, buildingIdFilter);
+    }
+
+    public List<RoomDto> getRoomsForSuperWithFilters(Integer floorFilter, Integer buildingIdFilter, Integer pageNumber){
+        return roomDao.getRoomsWithFilters(floorFilter, buildingIdFilter, pageNumber, PAGE_SIZE);
+    }
 
     public void updateRoom(Integer roomId, Integer buildingId, Integer number, Integer floor, 
                        Integer sleepingPlaces, Float price, String picture, String description) {

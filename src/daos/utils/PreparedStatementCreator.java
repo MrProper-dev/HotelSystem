@@ -93,7 +93,6 @@ public class PreparedStatementCreator{
         where.append(group.toString());
         root.append(where.toString());
         
-        System.out.println(root.toString());
         PreparedStatement statement = connection.prepareStatement(root.toString());
         addParams(statement);
         return statement;
