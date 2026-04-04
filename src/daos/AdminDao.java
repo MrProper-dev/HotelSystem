@@ -21,7 +21,7 @@ public class AdminDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
 
     private static final AdminDao instance = new AdminDao();
-    private AdminDao(){}
+    protected AdminDao(){}
     public static AdminDao getAdminDao(){
         return instance;
     }

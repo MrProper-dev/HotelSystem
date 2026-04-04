@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import services.AdminService;
 
-// TODO: добавить задачу, которая будет обновлять статус у броней
 @WebServlet("/admin/login/api/v1")
 public class AdminCheckPasswordServlet extends HttpServlet{
 

@@ -22,7 +22,7 @@ public class RoomDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
 
     private static final RoomDao instance = new RoomDao();
-    private RoomDao(){}
+    protected RoomDao(){}
     public static RoomDao getRoomDao(){
         return instance;
     }

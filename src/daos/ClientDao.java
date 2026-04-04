@@ -19,7 +19,7 @@ public class ClientDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
 
     private static final ClientDao instance = new ClientDao();
-    private ClientDao(){}
+    protected ClientDao(){}
     public static ClientDao getClientDao(){
         return instance;
     }

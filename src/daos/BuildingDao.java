@@ -18,7 +18,7 @@ public class BuildingDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
 
     private static final BuildingDao instance = new BuildingDao();
-    private BuildingDao(){}
+    protected BuildingDao(){}
     public static BuildingDao getBuildingDao(){
         return instance;
     }

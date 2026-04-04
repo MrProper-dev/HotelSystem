@@ -24,7 +24,7 @@ public class BookingDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
 
     private static final BookingDao instance = new BookingDao();
-    private BookingDao(){}
+    protected BookingDao(){}
     public static BookingDao getBookingDao(){
         return instance;
     }

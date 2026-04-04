@@ -17,7 +17,7 @@ public class GuestDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
     
     private static final GuestDao instance = new GuestDao();
-    private GuestDao() {}
+    protected GuestDao() {}
     public static GuestDao getGuestDao() {
         return instance;
     }

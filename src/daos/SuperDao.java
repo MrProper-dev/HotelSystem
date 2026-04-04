@@ -17,7 +17,7 @@ public class SuperDao {
     private ConnectionProvider connectionProvider = ConnectionProviderFactory.getConnectionProvider();
 
     private static final SuperDao instance = new SuperDao();
-    private SuperDao(){}
+    protected SuperDao(){}
     public static SuperDao getSuperDao(){
         return instance;
     }

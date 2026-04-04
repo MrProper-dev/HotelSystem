@@ -15,7 +15,6 @@ import services.BookingService;
 import services.BuildingService;
 import services.RoomService;
 
-// TODO: доделать старницу (отправка запроса на изменение и список последних бронирований)
 @WebServlet("/admin/rooms/*")
 public class AdminRoomCardServlet extends HttpServlet{
 
